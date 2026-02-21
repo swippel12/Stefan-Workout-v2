@@ -16,6 +16,9 @@
   html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow:hidden}
   .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
   .screen.active{display:flex}
+  #workout-screen{position:absolute;top:0;left:0;right:0;bottom:60px;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
+  #workout-screen.active{display:flex}
+  #workout-screen.active ~ #bottom-nav{display:flex}
   #setup-screen{align-items:center;justify-content:center;padding:32px 28px;background:linear-gradient(160deg,#0a0a0a 0%,#111 100%)}
   .setup-logo{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;line-height:0.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
   .setup-sub{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
@@ -59,7 +62,6 @@
   .benchmark-mini-label{font-size:10px;color:var(--text-muted);margin-bottom:2px}
   .benchmark-mini-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text-dim)}
   .benchmark-mini-val.filled{color:var(--accent)}
-  #workout-screen{background:var(--bg);padding-bottom:0}
   .workout-header{padding:44px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
   .workout-back{font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif}
   .workout-back:active{color:var(--text)}
@@ -100,7 +102,7 @@
   .rpe-select.filled{border-color:var(--surface3);color:var(--accent)}
   .set-check{width:30px;height:30px;border-radius:50%;background:var(--surface3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:background .2s}
   .set-check.done{background:var(--accent)}
-  .workout-footer{padding:14px 20px 20px;padding-bottom:calc(20px + env(safe-area-inset-bottom, 20px));border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)}
+  .workout-footer{padding:14px 20px 16px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)}
   .btn-done{width:100%;background:transparent;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:1px solid #444;border-radius:6px;cursor:pointer;transition:all .2s}
   .btn-done.ready{background:var(--accent);color:#000;border-color:var(--accent)}
   .btn-done:active{opacity:.8}
@@ -238,6 +240,17 @@
   .weight-log-delete{background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;padding:4px 8px}
   .weight-log-delete:active{color:var(--red)}
   .weight-section-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
+  /* Confirm modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:none;align-items:center;justify-content:center;padding:24px}
+  .modal-overlay.active{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:320px}
+  .modal-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;margin-bottom:8px}
+  .modal-body{font-size:14px;color:var(--text-dim);line-height:1.5;margin-bottom:24px}
+  .modal-buttons{display:flex;gap:10px}
+  .modal-btn{flex:1;padding:14px;border:none;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
+  .modal-btn:active{opacity:.8}
+  .modal-btn-cancel{background:var(--surface3);color:var(--text-dim)}
+  .modal-btn-confirm{background:var(--accent);color:#000}
   /* Settings */
   #settings-screen{background:var(--bg)}
   .settings-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -443,6 +456,17 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="modal-btn modal-btn-confirm" id="modal-confirm-btn" onclick="confirmAction()"></button>
+    </div>
+  </div>
+</div>
+
 <nav class="bottom-nav" id="bottom-nav">
   <div class="nav-items">
     <button class="nav-item active" id="nav-home" onclick="navTo('home-screen','nav-home')"><span class="nav-icon">⊞</span>Home</button>
@@ -636,27 +660,35 @@ function updateProgress(){
 }
 
 function finishWorkout(){
-  const dd=PLAN.months[currentWorkout.month].days[currentWorkout.day];
-  const logEntry={};let totalWeight=0,setsLogged=0;
-  dd.exercises.forEach((ex,exIdx)=>{
-    logEntry[ex.name]=[];
-    for(let s=0;s<(ex.sets||1);s++){
-      const w=document.getElementById(`w-${exIdx}-${s}`)?.value||'';
-      const r=document.getElementById(`r-${exIdx}-${s}`)?.value||'';
-      const done=document.getElementById(`chk-${exIdx}-${s}`)?.classList.contains('done')||false;
-      logEntry[ex.name].push({weight:w,rpe:r,done});
-      if(w){totalWeight+=parseFloat(w)||0;setsLogged++;}
+  // Show custom confirmation
+  showConfirm(
+    'Complete Workout?',
+    'This will mark the session as done and save your log.',
+    'Complete',
+    ()=>{
+      const dd=PLAN.months[currentWorkout.month].days[currentWorkout.day];
+      const logEntry={};let totalWeight=0,setsLogged=0;
+      dd.exercises.forEach((ex,exIdx)=>{
+        logEntry[ex.name]=[];
+        for(let s=0;s<(ex.sets||1);s++){
+          const w=document.getElementById(`w-${exIdx}-${s}`)?.value||'';
+          const r=document.getElementById(`r-${exIdx}-${s}`)?.value||'';
+          const done=document.getElementById(`chk-${exIdx}-${s}`)?.classList.contains('done')||false;
+          logEntry[ex.name].push({weight:w,rpe:r,done});
+          if(w){totalWeight+=parseFloat(w)||0;setsLogged++;}
+        }
+      });
+      const dateStr=new Date().toISOString().split('T')[0];
+      state.log[`${dateStr}_${currentWorkout.day}`]=logEntry;
+      state.completedDays[currentWorkout.logKey]=true;saveState();
+      document.getElementById('complete-title').innerHTML='SESSION<br>DONE';
+      document.getElementById('complete-sub').textContent=`Month ${currentWorkout.month}, Day ${currentWorkout.day} — logged ✓`;
+      const avgW=setsLogged>0?Math.round(totalWeight/setsLogged):0;
+      const exDone=dd.exercises.filter((e,i)=>{for(let s=0;s<(e.sets||1);s++){const chk=document.getElementById(`chk-${i}-${s}`);if(chk?.classList.contains('done'))return true;}return false;}).length;
+      document.getElementById('complete-stats').innerHTML=`<div class="complete-stat"><div class="complete-stat-val">${dd.exercises.length}</div><div class="complete-stat-label">Exercises</div></div><div class="complete-stat"><div class="complete-stat-val">${setsLogged}</div><div class="complete-stat-label">Sets Logged</div></div><div class="complete-stat"><div class="complete-stat-val">${avgW||'—'}</div><div class="complete-stat-label">Avg Weight</div></div><div class="complete-stat"><div class="complete-stat-val">${exDone}</div><div class="complete-stat-label">Exercises Done</div></div>`;
+      goTo('complete-screen');
     }
-  });
-  const dateStr=new Date().toISOString().split('T')[0];
-  state.log[`${dateStr}_${currentWorkout.day}`]=logEntry;
-  state.completedDays[currentWorkout.logKey]=true;saveState();
-  document.getElementById('complete-title').innerHTML='SESSION<br>DONE';
-  document.getElementById('complete-sub').textContent=`Month ${currentWorkout.month}, Day ${currentWorkout.day} — logged ✓`;
-  const avgW=setsLogged>0?Math.round(totalWeight/setsLogged):0;
-  const exDone=dd.exercises.filter((e,i)=>{for(let s=0;s<(e.sets||1);s++){const chk=document.getElementById(`chk-${i}-${s}`);if(chk?.classList.contains('done'))return true;}return false;}).length;
-  document.getElementById('complete-stats').innerHTML=`<div class="complete-stat"><div class="complete-stat-val">${dd.exercises.length}</div><div class="complete-stat-label">Exercises</div></div><div class="complete-stat"><div class="complete-stat-val">${setsLogged}</div><div class="complete-stat-label">Sets Logged</div></div><div class="complete-stat"><div class="complete-stat-val">${avgW||'—'}</div><div class="complete-stat-label">Avg Weight</div></div><div class="complete-stat"><div class="complete-stat-val">${exDone}</div><div class="complete-stat-label">Exercises Done</div></div>`;
-  goTo('complete-screen');
+  );
 }
 
 function initBenchmarkScreen(){
@@ -906,6 +938,26 @@ function resetAllData(){
   saveState();
   alert('All data cleared.');
   navTo('home-screen','nav-home');
+}
+
+let confirmCallback=null;
+function showConfirm(title,body,confirmLabel,onConfirm){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').textContent=body;
+  document.getElementById('modal-confirm-btn').textContent=confirmLabel;
+  confirmCallback=onConfirm;
+  document.getElementById('confirm-modal').classList.add('active');
+}
+function closeConfirm(){
+  document.getElementById('confirm-modal').classList.remove('active');
+  confirmCallback=null;
+}
+document.getElementById('confirm-modal').addEventListener('click',function(e){
+  if(e.target===this)closeConfirm();
+});
+function confirmAction(){
+  if(confirmCallback)confirmCallback();
+  closeConfirm();
 }
 
 async function init(){
