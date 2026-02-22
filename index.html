@@ -11,26 +11,26 @@
 <title>Stefan Workout</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#282828;--border:#2a2a2a;--text:#f0f0f0;--text-dim:#888;--text-muted:#555;--accent:#e8ff00;--accent-dim:#b5c700;--red:#ff4444;--green:#44ff88;--phase1:#e8ff00;--phase2:#ff8c00;--phase3:#00d4ff}
+  :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#282828;--border:#2a2a2a;--text:#f0f0f0;--text-dim:#888;--text-muted:#555;--accent:#e8ff00;--accent-dim:#b5c700;--red:#ff4444;--green:#44ff88;--phase1:#e8ff00;--phase2:#ff8c00;--phase3:#00d4ff;--bc:'Barlow Condensed',sans-serif;--b:'Barlow',sans-serif}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;overflow:hidden}
+  html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--b);overflow:hidden}
   .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
-  .screen.active{display:flex}
+  .screen.active{display:flex;animation:fadeIn .2s ease}
   #workout-screen{position:absolute;top:0;left:0;right:0;bottom:60px;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
   #setup-screen{align-items:center;justify-content:center;padding:32px 28px;background:linear-gradient(160deg,#0a0a0a 0%,#111 100%)}
-  .setup-logo{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;line-height:0.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
-  .setup-sub{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
-  .setup-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;align-self:flex-start;width:100%}
-  .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:6px;margin-bottom:28px;-webkit-appearance:none}
+  .setup-logo{font-family:var(--bc);font-size:64px;font-weight:900;line-height:.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
+  .setup-sub{font-family:var(--bc);font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
+  .setup-label{font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;align-self:flex-start;width:100%}
+  .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--b);font-size:16px;padding:14px 16px;border-radius:6px;margin-bottom:28px;-webkit-appearance:none}
   .setup-input:focus{outline:none;border-color:var(--accent)}
-  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}
+  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}
   .btn-primary:active{opacity:.8}
   #home-screen{background:var(--bg)}
   .home-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
-  .home-phase-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
-  .home-title{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;line-height:1;letter-spacing:-1px}
+  .home-phase-label{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
+  .home-title{font-family:var(--bc);font-size:40px;font-weight:900;line-height:1;letter-spacing:-1px}
   .home-meta{font-size:13px;color:var(--text-dim);margin-top:4px}
   .home-week-strip{display:flex;gap:5px;padding:16px 20px 0;flex-shrink:0}
   .week-pip{flex:1;height:4px;border-radius:2px;background:var(--surface3);transition:background .3s}
@@ -40,62 +40,71 @@
   .deload-banner{background:var(--surface2);border:1px solid #ff8c0044;border-radius:8px;padding:12px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
   .deload-dot{width:7px;height:7px;border-radius:50%;background:#ff8c00;flex-shrink:0}
   .deload-text{font-size:12px;color:#ff8c00;font-weight:500}
-  .section-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
+  .section-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
   .day-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
   .day-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden}
   .day-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent)}
   .day-card.bonus::before{background:var(--text-muted)}
   .day-card:active{background:var(--surface2);border-color:var(--accent)}
-  .day-card-tag{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px}
-  .day-card-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700}
+  .day-card-tag{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:3px}
+  .day-card-name{font-family:var(--bc);font-size:20px;font-weight:700}
   .day-card-count{font-size:12px;color:var(--text-dim);margin-top:2px}
   .day-card-arrow{font-size:20px;color:var(--text-muted)}
   .day-card.completed{border-color:var(--surface3);opacity:.6}
   .day-card.completed::before{background:var(--green)}
-  .day-card-undo{font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);background:var(--surface3);border:none;border-radius:4px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:color .15s,background .15s}
+  .day-card-undo{font-size:11px;font-family:var(--bc);font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);background:var(--surface3);border:none;border-radius:4px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:color .15s,background .15s}
   .day-card-undo:active{color:var(--text);background:var(--surface2)}
   .benchmark-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:15px 16px;cursor:pointer;transition:border-color .15s}
   .benchmark-card:active{border-color:var(--accent)}
   .benchmark-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-  .benchmark-card-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+  .benchmark-card-title{font-family:var(--bc);font-size:17px;font-weight:700}
   .benchmark-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
   .benchmark-mini-label{font-size:10px;color:var(--text-muted);margin-bottom:2px}
-  .benchmark-mini-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text-dim)}
+  .benchmark-mini-val{font-family:var(--bc);font-size:16px;font-weight:700;color:var(--text-dim)}
   .benchmark-mini-val.filled{color:var(--accent)}
   .workout-header{padding:44px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-  .workout-back{font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif}
+  .workout-back{font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:var(--b)}
   .workout-back:active{color:var(--text)}
-  .workout-day-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
-  .workout-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;line-height:1}
+  .workout-day-tag{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
+  .workout-title{font-family:var(--bc);font-size:30px;font-weight:900;line-height:1}
   .workout-progress-bar{height:3px;background:var(--surface3);margin-top:14px;border-radius:2px;overflow:hidden}
   .workout-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
   .workout-content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
   .top-progress-wrap{background:var(--bg);padding:10px 20px 4px;flex-shrink:0;border-bottom:1px solid var(--border)}
   .top-progress-track{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
   .top-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .35s ease;width:0%}
-  .top-progress-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;text-align:right;margin-top:5px;margin-bottom:2px}
+  .top-progress-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;text-align:right;margin-top:5px;margin-bottom:2px}
+  /* Timer bar */
+  .timer-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+  .timer-display{font-family:var(--bc);font-size:28px;font-weight:900;color:var(--accent);letter-spacing:2px}
+  .timer-controls{display:flex;gap:8px}
+  .timer-btn{background:var(--surface3);border:1px solid var(--border);color:var(--text);font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;border-radius:6px;cursor:pointer;transition:background .15s,border-color .15s}
+  .timer-btn:active{background:var(--surface2)}
+  .timer-btn.running{border-color:var(--accent);color:var(--accent)}
+  .timer-btn.paused{border-color:var(--phase2);color:var(--phase2)}
   .exercise-item{border-bottom:1px solid var(--border);padding:16px 0}
   .exercise-item:last-child{border-bottom:none}
-  .exercise-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
-  .exercise-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;line-height:1.1;flex:1;padding-right:10px}
-  .exercise-superset-tag{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--phase3);border:1px solid var(--phase3);padding:2px 6px;border-radius:3px;text-transform:uppercase;white-space:nowrap;margin-top:2px}
+  .exercise-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+  /* UPDATED: More visible exercise names */
+  .exercise-name{font-family:var(--bc);font-size:26px;font-weight:900;line-height:1.1;flex:1;padding-right:10px;color:#fff;letter-spacing:-0.5px;text-transform:uppercase}
+  .exercise-superset-tag{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--phase3);border:1px solid var(--phase3);padding:2px 6px;border-radius:3px;text-transform:uppercase;white-space:nowrap;margin-top:5px}
   .exercise-specs{display:flex;gap:14px;margin-bottom:8px}
   .spec-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
-  .spec-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600}
+  .spec-val{font-family:var(--bc);font-size:16px;font-weight:600}
   .exercise-note{font-size:12px;color:var(--text-dim);line-height:1.5;background:var(--surface2);border-radius:6px;padding:8px 10px;margin-bottom:12px}
   .exercise-note.superset-note{border-left:2px solid var(--phase3)}
   .last-weight-hint{font-size:11px;color:var(--text-muted);margin-bottom:8px;line-height:1.6}
   .last-weight-hint span{color:var(--accent-dim);font-weight:600}
   .log-sets{display:flex;flex-direction:column;gap:7px}
   .log-set-row{display:flex;align-items:center;gap:8px}
-  .set-num{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--text-muted);width:22px;flex-shrink:0;text-align:center}
+  .set-num{font-family:var(--bc);font-size:12px;font-weight:700;color:var(--text-muted);width:22px;flex-shrink:0;text-align:center}
   .log-input-wrap{flex:1;position:relative}
   .log-input-label{font-size:8px;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;position:absolute;top:5px;left:10px}
-  .log-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:19px 10px 6px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-align:center;-webkit-appearance:none;-moz-appearance:textfield;transition:border-color .15s}
+  .log-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:19px 10px 6px;color:var(--text);font-family:var(--bc);font-size:20px;font-weight:700;text-align:center;-webkit-appearance:none;-moz-appearance:textfield;transition:border-color .15s}
   .log-input:focus{outline:none;border-color:var(--accent)}
   .log-input.filled{border-color:var(--surface3);color:var(--accent)}
   .log-input::-webkit-inner-spin-button,.log-input::-webkit-outer-spin-button{-webkit-appearance:none}
-  .rpe-select{width:70px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:19px 6px 6px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;text-align:center;-webkit-appearance:none;transition:border-color .15s;flex-shrink:0}
+  .rpe-select{width:70px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:19px 6px 6px;color:var(--text);font-family:var(--bc);font-size:20px;font-weight:700;text-align:center;-webkit-appearance:none;transition:border-color .15s;flex-shrink:0}
   .rpe-wrap{position:relative;flex-shrink:0;width:70px}
   .rpe-wrap .log-input-label{z-index:1}
   .rpe-select:focus{outline:none;border-color:var(--accent)}
@@ -103,26 +112,26 @@
   .set-check{width:30px;height:30px;border-radius:50%;background:var(--surface3);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:background .2s}
   .set-check.done{background:var(--accent)}
   .workout-footer{padding:14px 20px 16px;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg)}
-  .btn-done{width:100%;background:transparent;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:1px solid #444;border-radius:6px;cursor:pointer;transition:all .2s}
+  .btn-done{width:100%;background:transparent;color:var(--text);font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:1px solid #444;border-radius:6px;cursor:pointer;transition:all .2s}
   .btn-done.ready{background:var(--accent);color:#000;border-color:var(--accent)}
   .btn-done:active{opacity:.8}
   #complete-screen{align-items:center;justify-content:center;padding:32px 28px;background:var(--bg)}
   .complete-icon{font-size:56px;margin-bottom:20px}
-  .complete-title{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:900;color:var(--accent);text-align:center;line-height:1;margin-bottom:6px}
+  .complete-title{font-family:var(--bc);font-size:48px;font-weight:900;color:var(--accent);text-align:center;line-height:1;margin-bottom:6px}
   .complete-sub{font-size:14px;color:var(--text-dim);text-align:center;margin-bottom:32px}
   .complete-stats{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px}
   .complete-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
-  .complete-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent)}
+  .complete-stat-val{font-family:var(--bc);font-size:28px;font-weight:900;color:var(--accent)}
   .complete-stat-label{font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
   #benchmark-screen{background:var(--bg)}
   .benchmark-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .benchmark-content{flex:1;overflow-y:auto;padding:16px 20px 80px}
   .benchmark-lift{border-bottom:1px solid var(--border);padding:16px 0}
   .benchmark-lift:last-child{border-bottom:none}
-  .benchmark-lift-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;margin-bottom:12px}
+  .benchmark-lift-name{font-family:var(--bc);font-size:18px;font-weight:700;margin-bottom:12px}
   .benchmark-phases{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px}
   .bpc-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
-  .bpc-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 4px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;text-align:center;-webkit-appearance:none;-moz-appearance:textfield}
+  .bpc-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 4px;color:var(--text);font-family:var(--bc);font-size:18px;font-weight:700;text-align:center;-webkit-appearance:none;-moz-appearance:textfield}
   .bpc-input:focus{outline:none;border-color:var(--accent)}
   .bpc-input::-webkit-inner-spin-button,.bpc-input::-webkit-outer-spin-button{-webkit-appearance:none}
   .bpc-input.filled{color:var(--accent);border-color:var(--surface3)}
@@ -132,7 +141,7 @@
   .history-content{flex:1;overflow-y:auto;padding:16px 20px 80px}
   .history-session{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
   .history-session-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-  .history-session-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+  .history-session-title{font-family:var(--bc);font-size:17px;font-weight:700}
   .history-session-date{font-size:11px;color:var(--text-dim)}
   .history-exercise-row{display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--border)}
   .history-ex-name{font-size:12px;color:var(--text-dim)}
@@ -140,29 +149,26 @@
   .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:none;padding:8px 0 0;padding-bottom:env(safe-area-inset-bottom, 16px);z-index:100}
   .bottom-nav.visible{display:flex}
   .nav-items{display:flex;width:100%}
-  .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:3px 0;background:none;border:none;color:var(--text-muted);font-family:'Barlow',sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:color .15s}
+  .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:3px 0;background:none;border:none;color:var(--text-muted);font-family:var(--b);font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:color .15s}
   .nav-item.active{color:var(--accent)}
   .nav-icon{font-size:20px}
   .phase-1{color:var(--phase1)}.phase-2{color:var(--phase2)}.phase-3{color:var(--phase3)}
   ::-webkit-scrollbar{width:0}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-  .screen.active{animation:fadeIn .2s ease}
   .empty-state{text-align:center;padding:48px 16px}
   .empty-state-icon{font-size:40px;margin-bottom:14px}
   .empty-state-text{font-size:14px;color:var(--text-muted)}
-  /* Plan browser */
   #plan-screen{background:var(--bg)}
   .plan-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between}
-  .plan-header-left{}
-  .plan-back-btn{font-size:13px;cursor:pointer;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif;padding:0;margin-bottom:6px;display:block}
+  .plan-back-btn{font-size:13px;cursor:pointer;background:none;border:none;color:var(--text-dim);font-family:var(--b);padding:0;margin-bottom:6px;display:block}
   .plan-back-btn:active{color:var(--text)}
-  .plan-screen-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
-  .plan-screen-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;line-height:1}
+  .plan-screen-tag{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
+  .plan-screen-title{font-family:var(--bc);font-size:32px;font-weight:900;line-height:1}
   .plan-content{flex:1;overflow-y:auto;padding:16px 20px 90px}
   .phase-block{margin-bottom:28px}
   .phase-block-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
   .phase-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-  .phase-block-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
+  .phase-block-title{font-family:var(--bc);font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
   .month-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .month-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden}
   .month-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
@@ -170,38 +176,36 @@
   .month-card.phase-2-card::before{background:var(--phase2)}
   .month-card.phase-3-card::before{background:var(--phase3)}
   .month-card:active{background:var(--surface2)}
-  .month-card-num{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
-  .month-card-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;line-height:1.1}
+  .month-card-num{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:3px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
+  .month-card-name{font-family:var(--bc);font-size:18px;font-weight:700;line-height:1.1}
   .month-card-arrow{font-size:13px;color:var(--text-muted);margin-top:6px}
-  /* Month detail (weeks list) */
   .week-block{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden}
   .week-block-header{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
   .week-block-header:active{background:var(--surface2)}
-  .week-block-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+  .week-block-title{font-family:var(--bc);font-size:17px;font-weight:700}
   .week-block-meta{font-size:11px;color:var(--text-muted);margin-top:2px}
   .week-block-chevron{font-size:16px;color:var(--text-muted);transition:transform .2s}
   .week-block-chevron.open{transform:rotate(90deg)}
   .week-block-body{display:none;border-top:1px solid var(--border)}
   .week-block-body.open{display:block}
   .day-tab-strip{display:flex;border-bottom:1px solid var(--border)}
-  .day-tab{flex:1;padding:10px 0;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+  .day-tab{flex:1;padding:10px 0;text-align:center;font-family:var(--bc);font-size:13px;font-weight:700;letter-spacing:2px;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
   .day-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
   .day-panel{display:none;padding:14px 16px}
   .day-panel.active{display:block}
   .plan-exercise-row{padding:10px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:4px}
   .plan-exercise-row:last-child{border-bottom:none}
-  .plan-ex-name{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .plan-ex-name{font-family:var(--bc);font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
   .plan-ex-ss{font-size:9px;font-weight:700;letter-spacing:2px;color:var(--phase3);border:1px solid var(--phase3);padding:2px 5px;border-radius:3px;text-transform:uppercase}
   .plan-ex-specs{display:flex;gap:16px;margin-top:2px}
   .plan-ex-spec{display:flex;flex-direction:column}
   .plan-ex-spec-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase}
-  .plan-ex-spec-val{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600}
+  .plan-ex-spec-val{font-family:var(--bc);font-size:15px;font-weight:600}
   .plan-ex-note{font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.4}
-  /* Plan progress bar */
   .plan-progress-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:24px}
   .plan-progress-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
-  .plan-progress-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700}
-  .plan-progress-count{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--text-dim)}
+  .plan-progress-title{font-family:var(--bc);font-size:15px;font-weight:700}
+  .plan-progress-count{font-family:var(--bc);font-size:13px;color:var(--text-dim)}
   .plan-overall-track{height:8px;background:var(--surface3);border-radius:4px;overflow:hidden;margin-bottom:14px}
   .plan-overall-fill{height:100%;background:var(--accent);border-radius:4px;transition:width .4s ease}
   .plan-phase-rows{display:flex;flex-direction:column;gap:8px}
@@ -209,66 +213,62 @@
   .plan-phase-row-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;width:60px;flex-shrink:0}
   .plan-phase-mini-track{flex:1;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
   .plan-phase-mini-fill{height:100%;border-radius:3px;transition:width .4s ease}
-  .plan-phase-row-count{font-family:'Barlow Condensed',sans-serif;font-size:12px;color:var(--text-muted);width:36px;text-align:right;flex-shrink:0}
-  /* Weight tracking */
+  .plan-phase-row-count{font-family:var(--bc);font-size:12px;color:var(--text-muted);width:36px;text-align:right;flex-shrink:0}
   #weight-screen{background:var(--bg)}
   .weight-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .weight-content{flex:1;overflow-y:auto;padding:16px 20px 90px}
   .weight-log-form{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
   .weight-form-row{display:flex;gap:10px;align-items:flex-end}
   .weight-form-group{flex:1;display:flex;flex-direction:column;gap:6px}
-  .weight-form-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted)}
-  .weight-form-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;width:100%;-webkit-appearance:none;-moz-appearance:textfield;transition:border-color .15s}
+  .weight-form-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted)}
+  .weight-form-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;color:var(--text);font-family:var(--bc);font-size:22px;font-weight:700;width:100%;-webkit-appearance:none;-moz-appearance:textfield;transition:border-color .15s}
   .weight-form-input:focus{outline:none;border-color:var(--accent)}
   .weight-form-input::-webkit-inner-spin-button,.weight-form-input::-webkit-outer-spin-button{-webkit-appearance:none}
-  .btn-log-weight{background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:12px 18px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;transition:opacity .15s;white-space:nowrap}
+  .btn-log-weight{background:var(--accent);color:#000;font-family:var(--bc);font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:12px 18px;border:none;border-radius:6px;cursor:pointer;flex-shrink:0;transition:opacity .15s;white-space:nowrap}
   .btn-log-weight:active{opacity:.8}
   .weight-chart-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
-  .weight-chart-title{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;margin-bottom:4px}
+  .weight-chart-title{font-family:var(--bc);font-size:15px;font-weight:700;margin-bottom:4px}
   .weight-chart-sub{font-size:11px;color:var(--text-muted);margin-bottom:14px}
   .weight-chart-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
   .wcs{background:var(--surface2);border-radius:6px;padding:10px;text-align:center}
-  .wcs-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--accent)}
+  .wcs-val{font-family:var(--bc);font-size:22px;font-weight:900;color:var(--accent)}
   .wcs-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
   canvas#weight-chart{width:100%;display:block;border-radius:4px}
   .weight-log-list{display:flex;flex-direction:column;gap:0}
   .weight-log-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
   .weight-log-item:last-child{border-bottom:none}
   .weight-log-date{font-size:13px;color:var(--text-dim)}
-  .weight-log-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--accent)}
+  .weight-log-val{font-family:var(--bc);font-size:20px;font-weight:700;color:var(--accent)}
   .weight-log-delta{font-size:11px;font-weight:600;margin-left:6px}
   .weight-log-delete{background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer;padding:4px 8px}
   .weight-log-delete:active{color:var(--red)}
-  .weight-section-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
-  /* Confirm modal */
+  .weight-section-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:10px}
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:999;display:none;align-items:center;justify-content:center;padding:24px}
   .modal-overlay.active{display:flex}
   .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;width:100%;max-width:320px}
-  .modal-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;margin-bottom:8px}
+  .modal-title{font-family:var(--bc);font-size:22px;font-weight:900;margin-bottom:8px}
   .modal-body{font-size:14px;color:var(--text-dim);line-height:1.5;margin-bottom:24px}
   .modal-buttons{display:flex;gap:10px}
-  .modal-btn{flex:1;padding:14px;border:none;border-radius:8px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
+  .modal-btn{flex:1;padding:14px;border:none;border-radius:8px;font-family:var(--bc);font-size:16px;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
   .modal-btn:active{opacity:.8}
   .modal-btn-cancel{background:var(--surface3);color:var(--text-dim)}
   .modal-btn-confirm{background:var(--accent);color:#000}
-  /* Settings */
   #settings-screen{background:var(--bg)}
   .settings-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .settings-content{flex:1;overflow-y:auto;padding:16px 20px 90px}
   .settings-section{margin-bottom:28px}
-  .settings-section-label{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px}
+  .settings-section-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px}
   .settings-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
   .settings-row{padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
   .settings-row:last-child{border-bottom:none}
   .settings-row:active{background:var(--surface2)}
-  .settings-row-left{}
-  .settings-row-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700}
+  .settings-row-title{font-family:var(--bc);font-size:17px;font-weight:700}
   .settings-row-sub{font-size:11px;color:var(--text-muted);margin-top:2px}
   .settings-row-icon{font-size:20px;color:var(--text-muted)}
   .settings-row.danger .settings-row-title{color:var(--red)}
   .settings-row.danger .settings-row-icon{color:var(--red)}
   .install-banner{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
-  .install-banner-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px}
+  .install-banner-title{font-family:var(--bc);font-size:17px;font-weight:700;margin-bottom:6px}
   .install-banner-steps{font-size:13px;color:var(--text-dim);line-height:1.8}
   .install-banner-steps span{color:var(--accent);font-weight:600}
   .data-info{background:var(--surface2);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text-dim);line-height:1.6;margin-bottom:20px}
@@ -311,10 +311,17 @@
 
 <div id="workout-screen" class="screen">
   <div class="workout-header">
-    <button class="workout-back" onclick="goTo('home-screen')">← Back</button>
+    <button class="workout-back" onclick="confirmExitWorkout()">← Back</button>
     <div class="workout-day-tag" id="workout-day-tag"></div>
     <div class="workout-title" id="workout-title"></div>
     <div class="workout-progress-bar"><div class="workout-progress-fill" id="workout-progress-fill" style="width:0%"></div></div>
+  </div>
+  <div class="timer-bar" id="timer-bar">
+    <div class="timer-display" id="timer-display">00:00</div>
+    <div class="timer-controls">
+      <button class="timer-btn" id="timer-toggle-btn" onclick="toggleTimer()">START</button>
+      <button class="timer-btn" id="timer-reset-btn" onclick="resetTimer()">RESET</button>
+    </div>
   </div>
   <div class="top-progress-wrap">
     <div class="top-progress-label" id="top-progress-label">0 / 0 SETS</div>
@@ -478,42 +485,121 @@
 </nav>
 
 <script>
-const PLAN={months:{1:{name:"Foundation",days:{A:{name:"Full Body — Primary",exercises:[{name:"Back Squat",sets:4,reps:"6–8",rest:"2 min",note:"Drive knees out, stay tall, brace hard"},{name:"Romanian Deadlift",sets:3,reps:"10",rest:"90s",note:"Hip hinge dominant — feel the hamstrings"},{name:"Push Press",sets:4,reps:"6–8",rest:"90s",note:"Dip, drive, press — use the legs"},{name:"Bent-Over Barbell Row",sets:3,reps:"10",rest:"90s",note:"Chest to bar, elbows drive back"},{name:"Farmer's Carry",sets:3,reps:"30m",rest:"60s",note:"Shoulders packed, core rigid, walk tall",superset:true},{name:"Dead Bug",sets:3,reps:"8/side",rest:"60s",note:"Low back glued to floor throughout"}]},B:{name:"Full Body — Primary",exercises:[{name:"Trap Bar Deadlift",sets:4,reps:"6–8",rest:"2 min",note:"Full hip extension lockout at top"},{name:"Bulgarian Split Squat",sets:3,reps:"8/side",rest:"90s",note:"Front shin vertical, drive through heel"},{name:"Dumbbell Bench Press",sets:3,reps:"10",rest:"90s",note:"Full ROM — touch chest, lock out top"},{name:"Prone Dumbbell Row",sets:3,reps:"10",rest:"90s",note:"Chest on bench, row to hip",superset:true},{name:"Overhead Press (strict)",sets:3,reps:"8",rest:"90s",note:"No leg drive — pure shoulder strength"},{name:"Plank + Hip Tap",sets:3,reps:"30s",rest:"60s",note:"Hips stay square — resist rotation"}]},C:{name:"Bonus — Power + Accessory",bonus:true,exercises:[{name:"Power Clean",sets:4,reps:"4",rest:"2 min",note:"Speed under the bar — land in quarter squat"},{name:"Goblet Squat",sets:3,reps:"12",rest:"60s",note:"Mobility + activation — perfect depth"},{name:"Cable Face Pull",sets:3,reps:"15",rest:"60s",note:"Elbows high, external rotation"},{name:"Lateral Band Walk",sets:3,reps:"15/side",rest:"45s",note:"Keep band tension throughout"},{name:"Pallof Press",sets:3,reps:"10/side",rest:"60s",note:"Anti-rotation — do not twist"},{name:"Box Jump",sets:3,reps:"5",rest:"90s",note:"Full reset between reps — quality over speed"}]}}},2:{name:"Loading",days:{A:{name:"Full Body — Primary",exercises:[{name:"Back Squat",sets:4,reps:"5–7",rest:"2 min",note:"Add 2.5–5kg vs Month 1 top weight"},{name:"Romanian Deadlift",sets:3,reps:"10",rest:"90s",note:"Increase load 5% — maintain form"},{name:"Push Press",sets:4,reps:"5–6",rest:"90s",note:"Heavier; explosive dip-drive"},{name:"Pendlay Row",sets:3,reps:"8",rest:"90s",note:"Bar starts on floor each rep — explosive pull"},{name:"Farmer's Carry",sets:3,reps:"40m",rest:"60s",note:"Heavier than Month 1",superset:true},{name:"Ab Wheel Rollout",sets:3,reps:"10",rest:"60s",note:"Hips don't sag — slow and controlled"}]},B:{name:"Full Body — Primary",exercises:[{name:"Conventional Deadlift",sets:4,reps:"5",rest:"2 min",note:"Swap trap bar — increase neural demand"},{name:"Bulgarian Split Squat",sets:3,reps:"8/side",rest:"90s",note:"Add weight — front foot elevated if mobile"},{name:"Barbell Bench Press",sets:3,reps:"8",rest:"90s",note:"Progress from DBs — heavier compound"},{name:"Cable Row",sets:3,reps:"12",rest:"90s",note:"Pull elbows past torso",superset:true},{name:"Arnold Press",sets:3,reps:"10",rest:"90s",note:"Rotation adds shoulder muscle"},{name:"Side Plank + Row",sets:3,reps:"8/side",rest:"60s",note:"Cable or band — anti-lateral + pulling"}]},C:{name:"Bonus — Olympic + Athletic",bonus:true,exercises:[{name:"Power Clean",sets:4,reps:"4",rest:"2 min",note:"Add 2.5kg vs Month 1 — speed still key"},{name:"Front Squat",sets:3,reps:"6",rest:"90s",note:"Upright torso, elbows high"},{name:"Dumbbell Lateral Raise",sets:3,reps:"15",rest:"60s",note:"Slow eccentric — 3 counts down"},{name:"Nordic Hamstring Curl",sets:3,reps:"6",rest:"90s",note:"Eccentric only; spotter or anchor feet"},{name:"Med Ball Slam",sets:3,reps:"8",rest:"60s",note:"Max force — full extension, fast slam"},{name:"Hanging Knee Raise",sets:3,reps:"12",rest:"60s",note:"Posterior tilt pelvis at top"}]}}},3:{name:"Intensity",days:{A:{name:"Full Body — Primary",exercises:[{name:"Back Squat",sets:5,reps:"5",rest:"2 min",note:"5x5 protocol — same weight across all sets"},{name:"Romanian Deadlift",sets:4,reps:"8",rest:"90s",note:"Heavier than Month 2"},{name:"Push Press",sets:4,reps:"5",rest:"90s",note:"Near max — explosive intent every rep"},{name:"Barbell Row",sets:4,reps:"8",rest:"90s",note:"Overhand grip — heavier load"},{name:"Suitcase Carry",sets:3,reps:"30m/side",rest:"60s",note:"Unilateral — fights lateral lean",superset:true},{name:"Dragon Flag Progression",sets:3,reps:"5–8",rest:"90s",note:"Tuck if needed — build to full"}]},B:{name:"Full Body — Primary",exercises:[{name:"Deadlift",sets:5,reps:"4",rest:"2.5 min",note:"Work up to top set of 4 — heavy"},{name:"Walking Lunge + Dumbbells",sets:3,reps:"12/side",rest:"90s",note:"Adds single-leg stability + load"},{name:"Incline Barbell Press",sets:3,reps:"8",rest:"90s",note:"Upper chest emphasis"},{name:"Seated Cable Row",sets:3,reps:"12",rest:"90s",note:"Close grip — retract fully",superset:true},{name:"Push Press to Behind Neck",sets:3,reps:"8",rest:"90s",note:"Only if shoulder mobility allows"},{name:"Copenhagen Plank",sets:3,reps:"15s/side",rest:"60s",note:"Adductor + core — sport carryover"}]},C:{name:"Bonus — Power + Core",bonus:true,exercises:[{name:"Hang Power Clean",sets:4,reps:"4",rest:"2 min",note:"Knee height start — teaches explosion"},{name:"Paused Back Squat",sets:3,reps:"5",rest:"2 min",note:"2-sec pause at bottom — strength + mobility"},{name:"Single Arm DB Press",sets:3,reps:"10/side",rest:"90s",note:"Anti-rotation challenge"},{name:"GHD Hip Extension",sets:3,reps:"12",rest:"60s",note:"Posterior chain focus"},{name:"Broad Jump",sets:4,reps:"4",rest:"90s",note:"Max distance — reset fully between reps"},{name:"L-Sit Hold",sets:3,reps:"15–20s",rest:"60s",note:"Parallel bars or floor — build hold time"}]}}},4:{name:"Peak + Test",days:{A:{name:"Full Body — Primary",exercises:[{name:"Back Squat (Peak)",sets:5,reps:"3",rest:"3 min",note:"Test near-max — aim for 3RM PR"},{name:"Romanian Deadlift",sets:4,reps:"6",rest:"90s",note:"Heavy — same weight last 2 sets"},{name:"Push Press",sets:3,reps:"3",rest:"2 min",note:"Explosive — test 3RM"},{name:"Barbell Row",sets:4,reps:"6",rest:"90s",note:"Heavy — full ROM, no swinging"},{name:"Carry Complex",sets:3,reps:"Varied",rest:"90s",note:"Farmer's 20m + Rack 20m + Overhead 20m",superset:true},{name:"Weighted Plank",sets:3,reps:"30s",rest:"60s",note:"Plate on back — maintain position"}]},B:{name:"Full Body — Primary",exercises:[{name:"Deadlift (Peak)",sets:4,reps:"3",rest:"3 min",note:"Work to 3RM — log this number"},{name:"Bulgarian Split Squat",sets:3,reps:"6/side",rest:"90s",note:"Heaviest load of the phase"},{name:"Barbell Bench Press",sets:4,reps:"5",rest:"2 min",note:"Strength test — aim for 5RM"},{name:"Weighted Pull-Up",sets:3,reps:"6–8",rest:"90s",note:"Add load — belt or dumbbell",superset:true},{name:"Strict Overhead Press",sets:3,reps:"5",rest:"90s",note:"Test strength — no leg drive"},{name:"Single-Leg RDL",sets:3,reps:"8/side",rest:"60s",note:"Balance + hamstring — use KB or DB"}]},C:{name:"Bonus — Athletic + Peak",bonus:true,exercises:[{name:"Clean & Press Combo",sets:5,reps:"3",rest:"2.5 min",note:"Power clean into push press — athletic flow"},{name:"Box Squat",sets:3,reps:"5",rest:"2 min",note:"Controlled descent, explosive rise"},{name:"Plyometric Push-Up",sets:3,reps:"8",rest:"90s",note:"Hands leave floor — power output"},{name:"Band Pull-Apart",sets:3,reps:"20",rest:"30s",note:"Shoulder health + rear delt"},{name:"Sprint",sets:4,reps:"20s",rest:"90s",note:"True max effort — long rest"},{name:"Hollow Body Rock",sets:3,reps:"20",rest:"60s",note:"Core tension through entire set"}]}}},5:{name:"Strength Base",days:{A:{name:"Primary Strength",exercises:[{name:"Back Squat",sets:5,reps:"5",rest:"3 min",note:"Linear progression — add 2.5kg/week"},{name:"Bench Press",sets:5,reps:"5",rest:"2.5 min",note:"Grip slightly wider than shoulder width"},{name:"Barbell Row",sets:5,reps:"5",rest:"2.5 min",note:"Mirror squat day — equal pulling volume"},{name:"Glute Ham Raise",sets:3,reps:"8",rest:"90s",note:"True knee flexion — not hip extension"},{name:"Weighted Dip",sets:3,reps:"8",rest:"90s",note:"Lean forward for chest focus"}]},B:{name:"Deadlift + Olympic",exercises:[{name:"Deadlift",sets:4,reps:"5",rest:"3 min",note:"Once/week heavy — protect CNS"},{name:"Overhead Press",sets:5,reps:"5",rest:"2.5 min",note:"Strict form — no lay-back"},{name:"Power Clean",sets:4,reps:"4",rest:"2.5 min",note:"Before fatigue sets in — speed lifts first"},{name:"Chin-Up (weighted)",sets:4,reps:"6",rest:"2 min",note:"Slow eccentric — 3 count down"},{name:"Ab Rollout",sets:3,reps:"12",rest:"60s",note:"Full extension if shoulder stable"}]},C:{name:"Bonus — Power + Conditioning",bonus:true,exercises:[{name:"Snatch-Grip High Pull",sets:4,reps:"4",rest:"2 min",note:"Wide grip — hip power to bar height"},{name:"Paused Squat",sets:3,reps:"5",rest:"2.5 min",note:"3-sec pause — build bottom strength"},{name:"Close-Grip Bench",sets:3,reps:"8",rest:"90s",note:"Tricep emphasis — elbows tucked"},{name:"Face Pull",sets:3,reps:"15",rest:"60s",note:"Shoulder health — do not skip"},{name:"Sled Push",sets:4,reps:"20m",rest:"90s",note:"Heavy and low — hip extension emphasis"}]}}},6:{name:"Strength Loading",days:{A:{name:"Primary",exercises:[{name:"Back Squat",sets:5,reps:"4",rest:"3 min",note:"Increase weight — lower volume per set"},{name:"Bench Press",sets:5,reps:"4",rest:"2.5 min",note:"Add 5kg vs Month 5 working weight"},{name:"Pendlay Row",sets:5,reps:"4",rest:"2.5 min",note:"Reset on floor — explosive concentric"},{name:"Romanian Deadlift",sets:3,reps:"8",rest:"90s",note:"Accessory — hamstring hypertrophy"},{name:"Cable Fly + Push-Up",sets:3,reps:"12+8",rest:"90s",note:"Metabolic finisher — chest pump",superset:true}]},B:{name:"Deadlift + Olympic",exercises:[{name:"Deadlift",sets:5,reps:"4",rest:"3 min",note:"Heavier than Month 5"},{name:"Overhead Press",sets:5,reps:"4",rest:"2.5 min",note:"Add 2.5kg — strict"},{name:"Hang Power Snatch",sets:4,reps:"3",rest:"2.5 min",note:"New skill — lighter load, perfect form"},{name:"Weighted Pull-Up",sets:4,reps:"5",rest:"2 min",note:"Increase weight from Phase 1"},{name:"Landmine Rotation",sets:3,reps:"10/side",rest:"60s",note:"Rotational power — sport pattern"}]},C:{name:"Bonus — Complex Lifts",bonus:true,exercises:[{name:"Clean Pull",sets:4,reps:"4",rest:"2 min",note:"Load heavier than clean — pull only"},{name:"Front Squat",sets:4,reps:"4",rest:"2.5 min",note:"Upright torso — builds clean rack position"},{name:"Floor Press",sets:3,reps:"6",rest:"2 min",note:"No leg drive — pure press strength"},{name:"Single-Arm Row (heavy)",sets:3,reps:"8/side",rest:"90s",note:"Brace on bench — max weight"},{name:"Prowler Sprint",sets:4,reps:"15m",rest:"2 min",note:"Light + fast — power, not strength"}]}}},7:{name:"Intensity Peak",days:{A:{name:"Strength Peak",exercises:[{name:"Back Squat",sets:6,reps:"3",rest:"3 min",note:"Volume + intensity — 6 sets of 3"},{name:"Bench Press",sets:4,reps:"4",rest:"3 min",note:"Work up to heavy top set of 4"},{name:"Barbell Row",sets:4,reps:"5",rest:"2.5 min",note:"Heavier than Month 6"},{name:"Leg Press (tempo)",sets:3,reps:"10",rest:"90s",note:"3 sec down, 1 up — volume for quads"},{name:"Skull Crusher",sets:3,reps:"12",rest:"60s",note:"Long head tricep — overhead position"}]},B:{name:"Power Peak",exercises:[{name:"Deadlift",sets:4,reps:"3",rest:"3 min",note:"Work to near-max triple"},{name:"Overhead Press",sets:4,reps:"4",rest:"2.5 min",note:"Work to heavy set of 4"},{name:"Power Clean + Front Squat",sets:4,reps:"2+2",rest:"3 min",note:"Combo — power + strength flow"},{name:"Weighted Pull-Up",sets:4,reps:"5",rest:"2 min",note:"Add load from Month 6"},{name:"GHD Sit-Up",sets:3,reps:"12",rest:"60s",note:"Hip flexor + core — eccentric control"}]},C:{name:"Bonus — Jerk + Explosive",bonus:true,exercises:[{name:"Jerk (split or push)",sets:4,reps:"3",rest:"3 min",note:"Overhead lockout — shoulder stability"},{name:"Safety Bar Squat",sets:3,reps:"6",rest:"2.5 min",note:"Different stimulus — upper back demand"},{name:"Incline DB Press",sets:3,reps:"10",rest:"90s",note:"Accessory upper chest"},{name:"T-Bar Row",sets:3,reps:"8",rest:"90s",note:"Chest supported or bent over"},{name:"Box Jump to Depth Jump",sets:4,reps:"4",rest:"2 min",note:"Land, immediately rebound — reactive"}]}}},8:{name:"Phase 2 Peak Test",days:{A:{name:"Strength Testing",exercises:[{name:"Back Squat (Peak Test)",sets:1,reps:"1–3",rest:"5 min",note:"Work to heavy single or triple — log it"},{name:"Bench Press (Peak Test)",sets:1,reps:"1–3",rest:"5 min",note:"Test 1RM or 3RM — record result"},{name:"Barbell Row",sets:3,reps:"5",rest:"2.5 min",note:"Deload volume — maintain strength"},{name:"Dumbbell Accessories",sets:2,reps:"12",rest:"60s",note:"Light — pump, not performance"},{name:"Core Circuit",sets:2,reps:"Varied",rest:"60s",note:"3 movements, 45s each — just move"}]},B:{name:"Full Power Test",exercises:[{name:"Deadlift (Peak Test)",sets:1,reps:"1–3",rest:"5 min",note:"Test 1RM or 3RM — log it carefully"},{name:"Overhead Press (Peak Test)",sets:1,reps:"3",rest:"4 min",note:"Test 3RM strict — benchmark"},{name:"Power Clean (Max Weight)",sets:3,reps:"2",rest:"3 min",note:"Heaviest clean attempt — form first"},{name:"Pull-Up (max reps)",sets:1,reps:"Max",rest:"—",note:"Bodyweight — record for future reference"},{name:"Loaded Carry Medley",sets:2,reps:"Varied",rest:"2 min",note:"All carry variations — celebration set"}]},C:{name:"Bonus — Peak Test",bonus:true,exercises:[{name:"Power Clean (Max)",sets:3,reps:"2",rest:"3 min",note:"Heaviest attempt — speed + form"},{name:"Box Squat",sets:3,reps:"5",rest:"2 min",note:"Explosive rise"},{name:"Weighted Pull-Up",sets:3,reps:"6",rest:"2 min",note:"Max load"},{name:"Sled Push",sets:4,reps:"20m",rest:"90s",note:"Heavy — finish strong"},{name:"Core Circuit",sets:2,reps:"Varied",rest:"60s",note:"3 movements — celebrate"}]}}},9:{name:"Transition",days:{A:{name:"Strength + Volume",exercises:[{name:"Back Squat",sets:4,reps:"6–8",rest:"90s",note:"Moderate weight — increased volume, less rest"},{name:"Bench Press",sets:4,reps:"8",rest:"90s",note:"Hypertrophy rep range again — pump work"},{name:"Cable Row",sets:4,reps:"12",rest:"60s",note:"Constant tension — full contraction"},{name:"Leg Extension + Leg Curl",sets:3,reps:"15+15",rest:"60s",note:"Isolation for definition phase",superset:true},{name:"Dips (bodyweight)",sets:3,reps:"Max",rest:"60s",note:"Max reps — push endurance"},{name:"Metabolic Finisher",sets:1,reps:"8 min",rest:"—",note:"EMOM: 5 KB swings + 5 push-ups each minute"}]},B:{name:"Athletic Power",exercises:[{name:"Power Clean",sets:4,reps:"4",rest:"2 min",note:"Maintain Olympic lifting — athletic base"},{name:"Front Squat",sets:3,reps:"8",rest:"90s",note:"High volume front squats — quad focus"},{name:"Push Press",sets:4,reps:"8",rest:"90s",note:"Moderate weight — explosiveness maintained"},{name:"Pull-Up Cluster",sets:4,reps:"6–8",rest:"90s",note:"Supinate grip variety — bicep + back"},{name:"Landmine Press (split stance)",sets:3,reps:"10/side",rest:"60s",note:"Sport-pattern pressing"},{name:"Sled/Prowler (conditioning)",sets:4,reps:"30m",rest:"90s",note:"Moderate load — aerobic capacity"}]},C:{name:"Bonus — Conditioning Focus",bonus:true,exercises:[{name:"Kettlebell Complex",sets:4,reps:"5 rounds",rest:"2 min",note:"Swing + Clean + Press + Squat — unbroken"},{name:"Single-Leg RDL",sets:3,reps:"10/side",rest:"60s",note:"Balance + posterior chain"},{name:"Arnold Press",sets:3,reps:"12",rest:"60s",note:"Shoulder detail — full rotation"},{name:"Face Pull",sets:3,reps:"20",rest:"45s",note:"Rear delt + rotator cuff health"},{name:"Battle Rope or Jump Rope",sets:4,reps:"30s",rest:"30s",note:"Conditioning — work:rest 1:1"},{name:"Hollow Rock",sets:3,reps:"30s",rest:"45s",note:"Core endurance"}]}}},10:{name:"Definition Push",days:{A:{name:"Volume + Definition",exercises:[{name:"Back Squat",sets:4,reps:"8–10",rest:"90s",note:"Volume up — definition phase loading"},{name:"Incline Bench Press",sets:4,reps:"10",rest:"90s",note:"Upper chest focus for shape"},{name:"Barbell Row",sets:4,reps:"10",rest:"90s",note:"Controlled — squeeze at top"},{name:"Walking Lunge (weighted)",sets:3,reps:"12/side",rest:"60s",note:"Glute + quad definition"},{name:"Cable Fly",sets:3,reps:"15",rest:"45s",note:"Stretch at bottom — no touching at top"},{name:"Metabolic Finisher",sets:1,reps:"10 min",rest:"—",note:"AMRAP: 8 box jumps + 8 DB thrusters + 200m row"}]},B:{name:"Power + Conditioning",exercises:[{name:"Hang Power Snatch",sets:4,reps:"4",rest:"2 min",note:"Speed and precision — not max load"},{name:"Box Squat",sets:3,reps:"6",rest:"2 min",note:"Explosive — drive up fast"},{name:"Strict Press",sets:4,reps:"8",rest:"90s",note:"Keep pressing strength with volume"},{name:"Weighted Chin-Up",sets:4,reps:"8",rest:"90s",note:"Heavy — back thickness work"},{name:"Tyre Flip or Sled Drag",sets:4,reps:"20m",rest:"90s",note:"Raw power + conditioning blend"},{name:"Copenhagen Plank",sets:3,reps:"20s/side",rest:"45s",note:"Adductor strength — hockey carry-over"}]},C:{name:"Bonus — Sport + Athletic",bonus:true,exercises:[{name:"Sport Circuit",sets:5,reps:"3 rounds",rest:"90s",note:"Box jump + Sprint + Med Ball Slam — explosive"},{name:"Paused Goblet Squat",sets:3,reps:"12",rest:"60s",note:"Mobility maintenance — deep squat"},{name:"Lateral Raise (cable)",sets:3,reps:"15",rest:"45s",note:"Side delt detail"},{name:"Hamstring Curl",sets:3,reps:"12",rest:"60s",note:"Injury prevention — eccentric control"},{name:"Farmer's Carry + Sprint finish",sets:3,reps:"30m+15m",rest:"90s",note:"Drop weights and sprint — contrast"},{name:"Plank Variations Circuit",sets:2,reps:"3 min",rest:"60s",note:"4 plank positions — 45s each"}]}}},11:{name:"Final Build",days:{A:{name:"Heavy + Volume",exercises:[{name:"Back Squat",sets:5,reps:"5",rest:"2.5 min",note:"Return to strength rep range — carry both"},{name:"Bench Press",sets:5,reps:"5",rest:"2.5 min",note:"Heavy again — maintain Phase 2 gains"},{name:"Barbell Row",sets:5,reps:"5",rest:"2.5 min",note:"Match squat — balanced push/pull"},{name:"Leg Press",sets:3,reps:"15",rest:"60s",note:"Volume add — legs are priority"},{name:"Skullcrusher + Curl",sets:3,reps:"12+12",rest:"60s",note:"Arm detail + symmetry",superset:true},{name:"Weighted Vest Walk / Hike",sets:1,reps:"20 min",rest:"—",note:"Low intensity — recovery + conditioning"}]},B:{name:"Full Athletic Expression",exercises:[{name:"Clean & Jerk (complex)",sets:5,reps:"2+2",rest:"3 min",note:"Show off your year of work — max weight"},{name:"Front Squat",sets:3,reps:"5",rest:"2.5 min",note:"Strength — close to Phase 2 loads"},{name:"Push Press",sets:3,reps:"5",rest:"2 min",note:"Heavy — athletic overhead power"},{name:"Pull-Up (weighted)",sets:4,reps:"6",rest:"2 min",note:"Strongest you've ever been — test it"},{name:"Athletic Circuit",sets:3,reps:"4 min",rest:"2 min",note:"Sprint + Jump + Carry — sport feel"}]},C:{name:"Bonus — Plyometric + Carry",bonus:true,exercises:[{name:"Plyometric Complex",sets:4,reps:"4",rest:"2 min",note:"Depth jump + Broad jump + Sprint — max CNS"},{name:"Loaded Carry Medley",sets:3,reps:"Varied",rest:"2 min",note:"All carries — test your grip + core"},{name:"Band Work (shoulder care)",sets:2,reps:"20/side",rest:"30s",note:"Rotator cuff — maintain health"},{name:"Core Circuit (max effort)",sets:3,reps:"5 min",rest:"2 min",note:"Dragon flag + L-sit + Hollow rock"},{name:"Grip Training",sets:2,reps:"30s",rest:"60s",note:"Dead hang or towel pull-up"}]}}},12:{name:"Year-End Peak",days:{A:{name:"Full Year PR Test",exercises:[{name:"Back Squat (Year PR)",sets:1,reps:"1–5",rest:"5 min",note:"Test your actual year progress — 1, 3, or 5RM"},{name:"Bench Press (Year PR)",sets:1,reps:"1–5",rest:"5 min",note:"Same — log and compare to Month 1"},{name:"Deadlift (Year PR)",sets:1,reps:"1–5",rest:"5 min",note:"Heavy pull — celebrate this moment"},{name:"Barbell Row (Year PR)",sets:3,reps:"5",rest:"3 min",note:"Heaviest row of your life — earn it"},{name:"Overhead Press (Year PR)",sets:3,reps:"5",rest:"3 min",note:"Finish with your strict press best"}]},B:{name:"Celebration + Reflection",exercises:[{name:"Clean & Press (Year Max)",sets:4,reps:"2",rest:"3 min",note:"Max load — clean into push press"},{name:"Squat Variation of Choice",sets:3,reps:"8",rest:"90s",note:"Your favourite — reward yourself"},{name:"Pull-Up (bodyweight max)",sets:2,reps:"Max",rest:"3 min",note:"Compare to Month 8 result"},{name:"Loaded Carry (celebration)",sets:3,reps:"Free",rest:"90s",note:"Just carry heavy things — enjoy it"},{name:"Core + Mobility Flow",sets:1,reps:"15 min",rest:"—",note:"Wind down — honour the year"}]},C:{name:"Bonus — Sport + Recovery",bonus:true,exercises:[{name:"Sport Day — Free Choice",sets:0,reps:"—",rest:"—",note:"Play a sport, skate, run, be athletic"},{name:"Reflect + Deload",sets:0,reps:"—",rest:"—",note:"Light movement only — celebrate recovery"},{name:"Written Benchmark Review",sets:0,reps:"—",rest:"—",note:"Log all PRs vs start — month by month"}]}}}}};
+// Compressed exercise helper: [name, sets, reps, rest, note, superset?]
+function E(n,s,r,re,no,ss){return{name:n,sets:s,reps:r,rest:re,note:no,superset:!!ss}}
+// Compressed day helper: {name, exercises[], bonus?}
+function D(n,exs,b){return{name:n,exercises:exs,bonus:!!b}}
+
+const PLAN={months:{
+1:{name:"Foundation",days:{
+  A:D("Full Body — Primary",[E("Back Squat",4,"6–8","2 min","Drive knees out, stay tall, brace hard"),E("Romanian Deadlift",3,"10","90s","Hip hinge dominant — feel the hamstrings"),E("Push Press",4,"6–8","90s","Dip, drive, press — use the legs"),E("Bent-Over Barbell Row",3,"10","90s","Chest to bar, elbows drive back"),E("Farmer's Carry",3,"30m","60s","Shoulders packed, core rigid, walk tall",1),E("Dead Bug",3,"8/side","60s","Low back glued to floor throughout")]),
+  B:D("Full Body — Primary",[E("Trap Bar Deadlift",4,"6–8","2 min","Full hip extension lockout at top"),E("Bulgarian Split Squat",3,"8/side","90s","Front shin vertical, drive through heel"),E("Dumbbell Bench Press",3,"10","90s","Full ROM — touch chest, lock out top"),E("Prone Dumbbell Row",3,"10","90s","Chest on bench, row to hip",1),E("Overhead Press (strict)",3,"8","90s","No leg drive — pure shoulder strength"),E("Plank + Hip Tap",3,"30s","60s","Hips stay square — resist rotation")]),
+  C:D("Bonus — Power + Accessory",[E("Power Clean",4,"4","2 min","Speed under the bar — land in quarter squat"),E("Goblet Squat",3,"12","60s","Mobility + activation — perfect depth"),E("Cable Face Pull",3,"15","60s","Elbows high, external rotation"),E("Lateral Band Walk",3,"15/side","45s","Keep band tension throughout"),E("Pallof Press",3,"10/side","60s","Anti-rotation — do not twist"),E("Box Jump",3,"5","90s","Full reset between reps — quality over speed")],1)}},
+2:{name:"Loading",days:{
+  A:D("Full Body — Primary",[E("Back Squat",4,"5–7","2 min","Add 2.5–5kg vs Month 1 top weight"),E("Romanian Deadlift",3,"10","90s","Increase load 5% — maintain form"),E("Push Press",4,"5–6","90s","Heavier; explosive dip-drive"),E("Pendlay Row",3,"8","90s","Bar starts on floor each rep — explosive pull"),E("Farmer's Carry",3,"40m","60s","Heavier than Month 1",1),E("Ab Wheel Rollout",3,"10","60s","Hips don't sag — slow and controlled")]),
+  B:D("Full Body — Primary",[E("Conventional Deadlift",4,"5","2 min","Swap trap bar — increase neural demand"),E("Bulgarian Split Squat",3,"8/side","90s","Add weight — front foot elevated if mobile"),E("Barbell Bench Press",3,"8","90s","Progress from DBs — heavier compound"),E("Cable Row",3,"12","90s","Pull elbows past torso",1),E("Arnold Press",3,"10","90s","Rotation adds shoulder muscle"),E("Side Plank + Row",3,"8/side","60s","Cable or band — anti-lateral + pulling")]),
+  C:D("Bonus — Olympic + Athletic",[E("Power Clean",4,"4","2 min","Add 2.5kg vs Month 1 — speed still key"),E("Front Squat",3,"6","90s","Upright torso, elbows high"),E("Dumbbell Lateral Raise",3,"15","60s","Slow eccentric — 3 counts down"),E("Nordic Hamstring Curl",3,"6","90s","Eccentric only; spotter or anchor feet"),E("Med Ball Slam",3,"8","60s","Max force — full extension, fast slam"),E("Hanging Knee Raise",3,"12","60s","Posterior tilt pelvis at top")],1)}},
+3:{name:"Intensity",days:{
+  A:D("Full Body — Primary",[E("Back Squat",5,"5","2 min","5x5 protocol — same weight across all sets"),E("Romanian Deadlift",4,"8","90s","Heavier than Month 2"),E("Push Press",4,"5","90s","Near max — explosive intent every rep"),E("Barbell Row",4,"8","90s","Overhand grip — heavier load"),E("Suitcase Carry",3,"30m/side","60s","Unilateral — fights lateral lean",1),E("Dragon Flag Progression",3,"5–8","90s","Tuck if needed — build to full")]),
+  B:D("Full Body — Primary",[E("Deadlift",5,"4","2.5 min","Work up to top set of 4 — heavy"),E("Walking Lunge + Dumbbells",3,"12/side","90s","Adds single-leg stability + load"),E("Incline Barbell Press",3,"8","90s","Upper chest emphasis"),E("Seated Cable Row",3,"12","90s","Close grip — retract fully",1),E("Push Press to Behind Neck",3,"8","90s","Only if shoulder mobility allows"),E("Copenhagen Plank",3,"15s/side","60s","Adductor + core — sport carryover")]),
+  C:D("Bonus — Power + Core",[E("Hang Power Clean",4,"4","2 min","Knee height start — teaches explosion"),E("Paused Back Squat",3,"5","2 min","2-sec pause at bottom — strength + mobility"),E("Single Arm DB Press",3,"10/side","90s","Anti-rotation challenge"),E("GHD Hip Extension",3,"12","60s","Posterior chain focus"),E("Broad Jump",4,"4","90s","Max distance — reset fully between reps"),E("L-Sit Hold",3,"15–20s","60s","Parallel bars or floor — build hold time")],1)}},
+4:{name:"Peak + Test",days:{
+  A:D("Full Body — Primary",[E("Back Squat (Peak)",5,"3","3 min","Test near-max — aim for 3RM PR"),E("Romanian Deadlift",4,"6","90s","Heavy — same weight last 2 sets"),E("Push Press",3,"3","2 min","Explosive — test 3RM"),E("Barbell Row",4,"6","90s","Heavy — full ROM, no swinging"),E("Carry Complex",3,"Varied","90s","Farmer's 20m + Rack 20m + Overhead 20m",1),E("Weighted Plank",3,"30s","60s","Plate on back — maintain position")]),
+  B:D("Full Body — Primary",[E("Deadlift (Peak)",4,"3","3 min","Work to 3RM — log this number"),E("Bulgarian Split Squat",3,"6/side","90s","Heaviest load of the phase"),E("Barbell Bench Press",4,"5","2 min","Strength test — aim for 5RM"),E("Weighted Pull-Up",3,"6–8","90s","Add load — belt or dumbbell",1),E("Strict Overhead Press",3,"5","90s","Test strength — no leg drive"),E("Single-Leg RDL",3,"8/side","60s","Balance + hamstring — use KB or DB")]),
+  C:D("Bonus — Athletic + Peak",[E("Clean & Press Combo",5,"3","2.5 min","Power clean into push press — athletic flow"),E("Box Squat",3,"5","2 min","Controlled descent, explosive rise"),E("Plyometric Push-Up",3,"8","90s","Hands leave floor — power output"),E("Band Pull-Apart",3,"20","30s","Shoulder health + rear delt"),E("Sprint",4,"20s","90s","True max effort — long rest"),E("Hollow Body Rock",3,"20","60s","Core tension through entire set")],1)}},
+5:{name:"Strength Base",days:{
+  A:D("Primary Strength",[E("Back Squat",5,"5","3 min","Linear progression — add 2.5kg/week"),E("Bench Press",5,"5","2.5 min","Grip slightly wider than shoulder width"),E("Barbell Row",5,"5","2.5 min","Mirror squat day — equal pulling volume"),E("Glute Ham Raise",3,"8","90s","True knee flexion — not hip extension"),E("Weighted Dip",3,"8","90s","Lean forward for chest focus")]),
+  B:D("Deadlift + Olympic",[E("Deadlift",4,"5","3 min","Once/week heavy — protect CNS"),E("Overhead Press",5,"5","2.5 min","Strict form — no lay-back"),E("Power Clean",4,"4","2.5 min","Before fatigue sets in — speed lifts first"),E("Chin-Up (weighted)",4,"6","2 min","Slow eccentric — 3 count down"),E("Ab Rollout",3,"12","60s","Full extension if shoulder stable")]),
+  C:D("Bonus — Power + Conditioning",[E("Snatch-Grip High Pull",4,"4","2 min","Wide grip — hip power to bar height"),E("Paused Squat",3,"5","2.5 min","3-sec pause — build bottom strength"),E("Close-Grip Bench",3,"8","90s","Tricep emphasis — elbows tucked"),E("Face Pull",3,"15","60s","Shoulder health — do not skip"),E("Sled Push",4,"20m","90s","Heavy and low — hip extension emphasis")],1)}},
+6:{name:"Strength Loading",days:{
+  A:D("Primary",[E("Back Squat",5,"4","3 min","Increase weight — lower volume per set"),E("Bench Press",5,"4","2.5 min","Add 5kg vs Month 5 working weight"),E("Pendlay Row",5,"4","2.5 min","Reset on floor — explosive concentric"),E("Romanian Deadlift",3,"8","90s","Accessory — hamstring hypertrophy"),E("Cable Fly + Push-Up",3,"12+8","90s","Metabolic finisher — chest pump",1)]),
+  B:D("Deadlift + Olympic",[E("Deadlift",5,"4","3 min","Heavier than Month 5"),E("Overhead Press",5,"4","2.5 min","Add 2.5kg — strict"),E("Hang Power Snatch",4,"3","2.5 min","New skill — lighter load, perfect form"),E("Weighted Pull-Up",4,"5","2 min","Increase weight from Phase 1"),E("Landmine Rotation",3,"10/side","60s","Rotational power — sport pattern")]),
+  C:D("Bonus — Complex Lifts",[E("Clean Pull",4,"4","2 min","Load heavier than clean — pull only"),E("Front Squat",4,"4","2.5 min","Upright torso — builds clean rack position"),E("Floor Press",3,"6","2 min","No leg drive — pure press strength"),E("Single-Arm Row (heavy)",3,"8/side","90s","Brace on bench — max weight"),E("Prowler Sprint",4,"15m","2 min","Light + fast — power, not strength")],1)}},
+7:{name:"Intensity Peak",days:{
+  A:D("Strength Peak",[E("Back Squat",6,"3","3 min","Volume + intensity — 6 sets of 3"),E("Bench Press",4,"4","3 min","Work up to heavy top set of 4"),E("Barbell Row",4,"5","2.5 min","Heavier than Month 6"),E("Leg Press (tempo)",3,"10","90s","3 sec down, 1 up — volume for quads"),E("Skull Crusher",3,"12","60s","Long head tricep — overhead position")]),
+  B:D("Power Peak",[E("Deadlift",4,"3","3 min","Work to near-max triple"),E("Overhead Press",4,"4","2.5 min","Work to heavy set of 4"),E("Power Clean + Front Squat",4,"2+2","3 min","Combo — power + strength flow"),E("Weighted Pull-Up",4,"5","2 min","Add load from Month 6"),E("GHD Sit-Up",3,"12","60s","Hip flexor + core — eccentric control")]),
+  C:D("Bonus — Jerk + Explosive",[E("Jerk (split or push)",4,"3","3 min","Overhead lockout — shoulder stability"),E("Safety Bar Squat",3,"6","2.5 min","Different stimulus — upper back demand"),E("Incline DB Press",3,"10","90s","Accessory upper chest"),E("T-Bar Row",3,"8","90s","Chest supported or bent over"),E("Box Jump to Depth Jump",4,"4","2 min","Land, immediately rebound — reactive")],1)}},
+8:{name:"Phase 2 Peak Test",days:{
+  A:D("Strength Testing",[E("Back Squat (Peak Test)",1,"1–3","5 min","Work to heavy single or triple — log it"),E("Bench Press (Peak Test)",1,"1–3","5 min","Test 1RM or 3RM — record result"),E("Barbell Row",3,"5","2.5 min","Deload volume — maintain strength"),E("Dumbbell Accessories",2,"12","60s","Light — pump, not performance"),E("Core Circuit",2,"Varied","60s","3 movements, 45s each — just move")]),
+  B:D("Full Power Test",[E("Deadlift (Peak Test)",1,"1–3","5 min","Test 1RM or 3RM — log it carefully"),E("Overhead Press (Peak Test)",1,"3","4 min","Test 3RM strict — benchmark"),E("Power Clean (Max Weight)",3,"2","3 min","Heaviest clean attempt — form first"),E("Pull-Up (max reps)",1,"Max","—","Bodyweight — record for future reference"),E("Loaded Carry Medley",2,"Varied","2 min","All carry variations — celebration set")]),
+  C:D("Bonus — Peak Test",[E("Power Clean (Max)",3,"2","3 min","Heaviest attempt — speed + form"),E("Box Squat",3,"5","2 min","Explosive rise"),E("Weighted Pull-Up",3,"6","2 min","Max load"),E("Sled Push",4,"20m","90s","Heavy — finish strong"),E("Core Circuit",2,"Varied","60s","3 movements — celebrate")],1)}},
+9:{name:"Transition",days:{
+  A:D("Strength + Volume",[E("Back Squat",4,"6–8","90s","Moderate weight — increased volume, less rest"),E("Bench Press",4,"8","90s","Hypertrophy rep range again — pump work"),E("Cable Row",4,"12","60s","Constant tension — full contraction"),E("Leg Extension + Leg Curl",3,"15+15","60s","Isolation for definition phase",1),E("Dips (bodyweight)",3,"Max","60s","Max reps — push endurance"),E("Metabolic Finisher",1,"8 min","—","EMOM: 5 KB swings + 5 push-ups each minute")]),
+  B:D("Athletic Power",[E("Power Clean",4,"4","2 min","Maintain Olympic lifting — athletic base"),E("Front Squat",3,"8","90s","High volume front squats — quad focus"),E("Push Press",4,"8","90s","Moderate weight — explosiveness maintained"),E("Pull-Up Cluster",4,"6–8","90s","Supinate grip variety — bicep + back"),E("Landmine Press (split stance)",3,"10/side","60s","Sport-pattern pressing"),E("Sled/Prowler (conditioning)",4,"30m","90s","Moderate load — aerobic capacity")]),
+  C:D("Bonus — Conditioning Focus",[E("Kettlebell Complex",4,"5 rounds","2 min","Swing + Clean + Press + Squat — unbroken"),E("Single-Leg RDL",3,"10/side","60s","Balance + posterior chain"),E("Arnold Press",3,"12","60s","Shoulder detail — full rotation"),E("Face Pull",3,"20","45s","Rear delt + rotator cuff health"),E("Battle Rope or Jump Rope",4,"30s","30s","Conditioning — work:rest 1:1"),E("Hollow Rock",3,"30s","45s","Core endurance")],1)}},
+10:{name:"Definition Push",days:{
+  A:D("Volume + Definition",[E("Back Squat",4,"8–10","90s","Volume up — definition phase loading"),E("Incline Bench Press",4,"10","90s","Upper chest focus for shape"),E("Barbell Row",4,"10","90s","Controlled — squeeze at top"),E("Walking Lunge (weighted)",3,"12/side","60s","Glute + quad definition"),E("Cable Fly",3,"15","45s","Stretch at bottom — no touching at top"),E("Metabolic Finisher",1,"10 min","—","AMRAP: 8 box jumps + 8 DB thrusters + 200m row")]),
+  B:D("Power + Conditioning",[E("Hang Power Snatch",4,"4","2 min","Speed and precision — not max load"),E("Box Squat",3,"6","2 min","Explosive — drive up fast"),E("Strict Press",4,"8","90s","Keep pressing strength with volume"),E("Weighted Chin-Up",4,"8","90s","Heavy — back thickness work"),E("Tyre Flip or Sled Drag",4,"20m","90s","Raw power + conditioning blend"),E("Copenhagen Plank",3,"20s/side","45s","Adductor strength — hockey carry-over")]),
+  C:D("Bonus — Sport + Athletic",[E("Sport Circuit",5,"3 rounds","90s","Box jump + Sprint + Med Ball Slam — explosive"),E("Paused Goblet Squat",3,"12","60s","Mobility maintenance — deep squat"),E("Lateral Raise (cable)",3,"15","45s","Side delt detail"),E("Hamstring Curl",3,"12","60s","Injury prevention — eccentric control"),E("Farmer's Carry + Sprint finish",3,"30m+15m","90s","Drop weights and sprint — contrast"),E("Plank Variations Circuit",2,"3 min","60s","4 plank positions — 45s each")],1)}},
+11:{name:"Final Build",days:{
+  A:D("Heavy + Volume",[E("Back Squat",5,"5","2.5 min","Return to strength rep range — carry both"),E("Bench Press",5,"5","2.5 min","Heavy again — maintain Phase 2 gains"),E("Barbell Row",5,"5","2.5 min","Match squat — balanced push/pull"),E("Leg Press",3,"15","60s","Volume add — legs are priority"),E("Skullcrusher + Curl",3,"12+12","60s","Arm detail + symmetry",1),E("Weighted Vest Walk / Hike",1,"20 min","—","Low intensity — recovery + conditioning")]),
+  B:D("Full Athletic Expression",[E("Clean & Jerk (complex)",5,"2+2","3 min","Show off your year of work — max weight"),E("Front Squat",3,"5","2.5 min","Strength — close to Phase 2 loads"),E("Push Press",3,"5","2 min","Heavy — athletic overhead power"),E("Pull-Up (weighted)",4,"6","2 min","Strongest you've ever been — test it"),E("Athletic Circuit",3,"4 min","2 min","Sprint + Jump + Carry — sport feel")]),
+  C:D("Bonus — Plyometric + Carry",[E("Plyometric Complex",4,"4","2 min","Depth jump + Broad jump + Sprint — max CNS"),E("Loaded Carry Medley",3,"Varied","2 min","All carries — test your grip + core"),E("Band Work (shoulder care)",2,"20/side","30s","Rotator cuff — maintain health"),E("Core Circuit (max effort)",3,"5 min","2 min","Dragon flag + L-sit + Hollow rock"),E("Grip Training",2,"30s","60s","Dead hang or towel pull-up")],1)}},
+12:{name:"Year-End Peak",days:{
+  A:D("Full Year PR Test",[E("Back Squat (Year PR)",1,"1–5","5 min","Test your actual year progress — 1, 3, or 5RM"),E("Bench Press (Year PR)",1,"1–5","5 min","Same — log and compare to Month 1"),E("Deadlift (Year PR)",1,"1–5","5 min","Heavy pull — celebrate this moment"),E("Barbell Row (Year PR)",3,"5","3 min","Heaviest row of your life — earn it"),E("Overhead Press (Year PR)",3,"5","3 min","Finish with your strict press best")]),
+  B:D("Celebration + Reflection",[E("Clean & Press (Year Max)",4,"2","3 min","Max load — clean into push press"),E("Squat Variation of Choice",3,"8","90s","Your favourite — reward yourself"),E("Pull-Up (bodyweight max)",2,"Max","3 min","Compare to Month 8 result"),E("Loaded Carry (celebration)",3,"Free","90s","Just carry heavy things — enjoy it"),E("Core + Mobility Flow",1,"15 min","—","Wind down — honour the year")]),
+  C:D("Bonus — Sport + Recovery",[E("Sport Day — Free Choice",0,"—","—","Play a sport, skate, run, be athletic"),E("Reflect + Deload",0,"—","—","Light movement only — celebrate recovery"),E("Written Benchmark Review",0,"—","—","Log all PRs vs start — month by month")],1)}}
+}};
+
 const BENCHMARKS=[{key:"squat",name:"Back Squat (3RM)"},{key:"deadlift",name:"Deadlift (3RM)"},{key:"bench",name:"Bench Press (3RM)"},{key:"ohp",name:"Overhead Press (3RM)"},{key:"clean",name:"Power Clean (max)"},{key:"pullups",name:"Pull-Ups (max reps)"},{key:"bw",name:"Bodyweight (lbs)"}];
 const PHASES=[{num:1,months:[1,2,3,4],name:"HYPERTROPHY",color:"phase-1"},{num:2,months:[5,6,7,8],name:"STRENGTH + POWER",color:"phase-2"},{num:3,months:[9,10,11,12],name:"RECOMPOSITION + PEAK",color:"phase-3"}];
 
 let state={startDate:null,log:{},benchmarks:{},completedDays:{}};
 
+// ---- Timer ----
+let timerInterval=null,timerSeconds=0,timerRunning=false;
+
+function formatTime(s){
+  const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+  if(h>0)return`${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+function updateTimerDisplay(){
+  document.getElementById('timer-display').textContent=formatTime(timerSeconds);
+}
+
+function toggleTimer(){
+  const btn=document.getElementById('timer-toggle-btn');
+  if(timerRunning){
+    clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+    btn.textContent='RESUME';btn.className='timer-btn paused';
+  } else {
+    timerRunning=true;
+    timerInterval=setInterval(()=>{timerSeconds++;updateTimerDisplay();},1000);
+    btn.textContent='PAUSE';btn.className='timer-btn running';
+  }
+}
+
+function resetTimer(){
+  clearInterval(timerInterval);timerInterval=null;timerRunning=false;timerSeconds=0;
+  updateTimerDisplay();
+  const btn=document.getElementById('timer-toggle-btn');
+  btn.textContent='START';btn.className='timer-btn';
+}
+
+function stopTimer(){
+  clearInterval(timerInterval);timerInterval=null;timerRunning=false;
+}
+
+// ---- State persistence ----
 async function saveState(){
-  const data=JSON.stringify(state);
-  // localStorage is primary — works perfectly in Safari on iPhone
-  try{localStorage.setItem('stefan_workout_v1',data);}catch(e){}
-  // Claude artifact storage as secondary
-  try{await window.storage.set('workout_v1',data);}catch(e){}
+  try{localStorage.setItem('stefan_workout_v1',JSON.stringify(state));}catch(e){}
+  try{await window.storage.set('workout_v1',JSON.stringify(state));}catch(e){}
 }
 async function loadState(){
-  // Try localStorage first (primary for Safari)
-  try{
-    const s=localStorage.getItem('stefan_workout_v1');
-    if(s){state=JSON.parse(s);return;}
-  }catch(e){}
-  // Fall back to Claude storage
-  try{
-    const r=await window.storage.get('workout_v1');
-    if(r&&r.value){state=JSON.parse(r.value);return;}
-  }catch(e){}
+  try{const s=localStorage.getItem('stefan_workout_v1');if(s){state=JSON.parse(s);return;}}catch(e){}
+  try{const r=await window.storage.get('workout_v1');if(r&&r.value){state=JSON.parse(r.value);return;}}catch(e){}
 }
 
 function getCurrentPosition(){
   if(!state.startDate)return null;
-  const start=new Date(state.startDate);const today=new Date();
-  const diffDays=Math.floor((today-start)/(1000*60*60*24));
+  const start=new Date(state.startDate),today=new Date();
+  const diffDays=Math.floor((today-start)/(864e5));
   const week=Math.floor(diffDays/7)+1;
   const month=Math.min(Math.ceil(week/4),12);
   const weekInMonth=((week-1)%4)+1;
-  const isDeload=weekInMonth===4;
-  const phase=PHASES.find(p=>p.months.includes(month));
-  return{week,month,weekInMonth,isDeload,phase};
+  return{week,month,weekInMonth,isDeload:weekInMonth===4,phase:PHASES.find(p=>p.months.includes(month))};
 }
 
 function setupPlan(){
@@ -557,20 +643,28 @@ function initHomeScreen(){
     const sk=`${month}_${weekInMonth}_${day}`;const isDone=state.completedDays[sk];
     const card=document.createElement('div');
     card.className=`day-card${isBonus?' bonus':''}${isDone?' completed':''}`;
-    card.innerHTML=`<div class="day-card-left"><div class="day-card-tag">Day ${day}${isBonus?' · Optional':' · Required'}</div><div class="day-card-name">${dd.name}</div><div class="day-card-count">${dd.exercises.length} exercises</div></div>${isDone?`<button class="day-card-undo" onclick="event.stopPropagation();undoDay('${sk}')">UNDO</button>`:'<div class="day-card-arrow">→</div>'}`;
+    card.innerHTML=`<div><div class="day-card-tag">Day ${day}${isBonus?' · Optional':' · Required'}</div><div class="day-card-name">${dd.name}</div><div class="day-card-count">${dd.exercises.length} exercises</div></div>${isDone?`<button class="day-card-undo" onclick="event.stopPropagation();undoDay('${sk}')">UNDO</button>`:'<div class="day-card-arrow">→</div>'}`;
     if(!isDone)card.onclick=()=>startWorkout(month,weekInMonth,day);cards.appendChild(card);
   });
   const mini=document.getElementById('benchmark-mini');mini.innerHTML='';
   ['squat','deadlift','bench','ohp'].forEach(key=>{
     const lift=BENCHMARKS.find(b=>b.key===key);const vals=state.benchmarks[key]||{};
-    const latestVal=vals.m12||vals.m8||vals.m4||vals.m1||'—';
-    const div=document.createElement('div');div.className='benchmark-mini-item';
-    div.innerHTML=`<div class="benchmark-mini-label">${lift.name.replace(' (3RM)','')}</div><div class="benchmark-mini-val ${latestVal!=='—'?'filled':''}">${latestVal!=='—'?latestVal+' lbs':'—'}</div>`;
-    mini.appendChild(div);
+    const v=vals.m12||vals.m8||vals.m4||vals.m1||'—';
+    mini.innerHTML+=`<div><div class="benchmark-mini-label">${lift.name.replace(' (3RM)','')}</div><div class="benchmark-mini-val ${v!=='—'?'filled':''}">${v!=='—'?v+' lbs':'—'}</div></div>`;
   });
 }
 
 let currentWorkout={month:null,week:null,day:null,logKey:null};
+
+// ---- Back button confirmation ----
+function confirmExitWorkout(){
+  showConfirm(
+    'Exit Workout?',
+    'You have an active workout in progress. Your unsaved data for this session will be lost.',
+    'Exit',
+    ()=>{stopTimer();resetTimer();goTo('home-screen');}
+  );
+}
 
 function startWorkout(month,week,day){
   const dayData=PLAN.months[month].days[day];
@@ -579,8 +673,11 @@ function startWorkout(month,week,day){
   const tag=document.getElementById('workout-day-tag');
   tag.textContent=`PHASE ${phase.num} · MONTH ${month} · DAY ${day}`;tag.className=`workout-day-tag ${phase.color}`;
   document.getElementById('workout-title').textContent=dayData.name.toUpperCase();
+  // Reset timer
+  resetTimer();
   const content=document.getElementById('workout-content');content.innerHTML='';
   const lastSessionData=getLastSessionWeights(day);
+  const rpeOpts=[6,7,8,9,10].map(v=>`<option value="${v}">${v}</option>`).join('');
   dayData.exercises.forEach((ex,exIdx)=>{
     const exDiv=document.createElement('div');exDiv.className='exercise-item';exDiv.id=`ex-${exIdx}`;
     const lastW=lastSessionData[ex.name];
@@ -588,45 +685,40 @@ function startWorkout(month,week,day){
     if(lastW){
       const rpeLabel=lastW.avgRPE?` · RPE ${lastW.avgRPE.toFixed(1)}`:'';
       let suggestHTML='';
-      if(lastW.suggested!==null&&lastW.suggested!==undefined){
+      if(lastW.suggested!=null){
         const diff=lastW.suggested-lastW.last;
         const arrow=diff>0?'↑':diff<0?'↓':'→';
         const color=diff>0?'var(--green)':diff<0?'var(--red)':'var(--accent-dim)';
-        const diffStr=diff!==0?` (${diff>0?'+':''}${diff})`:'';
-        suggestHTML=`<span style="color:${color};margin-left:10px">${arrow} Aim for <strong>${lastW.suggested} lbs</strong>${diffStr}</span>`;
+        suggestHTML=`<span style="color:${color};margin-left:10px">${arrow} Aim for <strong>${lastW.suggested} lbs</strong>${diff!==0?` (${diff>0?'+':''}${diff})`:''}</span>`;
       }
       lastHint=`<div class="last-weight-hint">Last: <span>${lastW.last} lbs${rpeLabel}</span>${suggestHTML}</div>`;
     }
     let setsHTML='';const numSets=ex.sets||1;
     for(let s=0;s<numSets;s++){
-      setsHTML+=`<div class="log-set-row"><div class="set-num">S${s+1}</div><div class="log-input-wrap"><div class="log-input-label">WEIGHT (lbs)</div><input type="number" class="log-input" id="w-${exIdx}-${s}" placeholder="—" oninput="onInputChange(${exIdx},${s})" onfocus="this.select()"></div><div class="rpe-wrap"><div class="log-input-label">RPE</div><select class="rpe-select" id="r-${exIdx}-${s}" onchange="onInputChange(${exIdx},${s})"><option value="">—</option>${[6,7,8,9,10].map(v=>`<option value="${v}">${v}</option>`).join('')}</select></div><button class="set-check" id="chk-${exIdx}-${s}" onclick="toggleSetDone(${exIdx},${s})">○</button></div>`;
+      setsHTML+=`<div class="log-set-row"><div class="set-num">S${s+1}</div><div class="log-input-wrap"><div class="log-input-label">WEIGHT (lbs)</div><input type="number" class="log-input" id="w-${exIdx}-${s}" placeholder="—" oninput="onInputChange(${exIdx},${s})" onfocus="this.select()"></div><div class="rpe-wrap"><div class="log-input-label">RPE</div><select class="rpe-select" id="r-${exIdx}-${s}" onchange="onInputChange(${exIdx},${s})"><option value="">—</option>${rpeOpts}</select></div><button class="set-check" id="chk-${exIdx}-${s}" onclick="toggleSetDone(${exIdx},${s})">○</button></div>`;
     }
-    exDiv.innerHTML=`<div class="exercise-header"><div class="exercise-name">${ex.name}</div>${ex.superset?'<div class="exercise-superset-tag">SUPERSET</div>':''}</div><div class="exercise-specs"><div class="spec-item"><div class="spec-label">Sets</div><div class="spec-val">${ex.sets||'—'}</div></div><div class="spec-item"><div class="spec-label">Reps</div><div class="spec-val">${ex.reps}</div></div><div class="spec-item"><div class="spec-label">Rest</div><div class="spec-val">${ex.rest}</div></div></div><div class="exercise-note${ex.superset?' superset-note':''}">${ex.note}</div>${lastHint}<div class="log-sets">${setsHTML}</div>`;
+    exDiv.innerHTML=`<div class="exercise-header"><div class="exercise-name">${ex.name}</div>${ex.superset?'<div class="exercise-superset-tag">SUPERSET</div>':''}</div><div class="exercise-specs"><div><div class="spec-label">Sets</div><div class="spec-val">${ex.sets||'—'}</div></div><div><div class="spec-label">Reps</div><div class="spec-val">${ex.reps}</div></div><div><div class="spec-label">Rest</div><div class="spec-val">${ex.rest}</div></div></div><div class="exercise-note${ex.superset?' superset-note':''}">${ex.note}</div>${lastHint}<div class="log-sets">${setsHTML}</div>`;
     content.appendChild(exDiv);
   });
   updateProgress();goTo('workout-screen');
 }
 
-function undoDay(sk){
-  delete state.completedDays[sk];
-  saveState();
-  initHomeScreen();
-}
+function undoDay(sk){delete state.completedDays[sk];saveState();initHomeScreen();}
 
 function getLastSessionWeights(dayLetter){
   const result={};
   const keys=Object.keys(state.log).filter(k=>k.endsWith('_'+dayLetter)).sort().reverse();
-  if(keys.length===0)return result;
+  if(!keys.length)return result;
   const last=state.log[keys[0]];
   Object.keys(last).forEach(exName=>{
     const sets=last[exName];
     const weights=sets.map(s=>parseFloat(s.weight)).filter(v=>!isNaN(v)&&v>0);
     const rpes=sets.map(s=>parseFloat(s.rpe)).filter(v=>!isNaN(v)&&v>0);
-    if(weights.length===0)return;
+    if(!weights.length)return;
     const maxW=Math.max(...weights);
     const avgRPE=rpes.length?rpes.reduce((a,b)=>a+b,0)/rpes.length:null;
     let suggested=null;
-    if(avgRPE!==null){
+    if(avgRPE!=null){
       if(avgRPE<=6)suggested=maxW+10;
       else if(avgRPE<=8)suggested=maxW+5;
       else if(avgRPE<=9)suggested=maxW;
@@ -640,8 +732,8 @@ function getLastSessionWeights(dayLetter){
 function onInputChange(exIdx,setIdx){
   const w=document.getElementById(`w-${exIdx}-${setIdx}`);
   const r=document.getElementById(`r-${exIdx}-${setIdx}`);
-  if(w.value)w.classList.add('filled');else w.classList.remove('filled');
-  if(r.value)r.classList.add('filled');else r.classList.remove('filled');
+  w.classList.toggle('filled',!!w.value);
+  r.classList.toggle('filled',!!r.value);
   updateProgress();
 }
 function toggleSetDone(exIdx,setIdx){
@@ -651,7 +743,7 @@ function toggleSetDone(exIdx,setIdx){
 function updateProgress(){
   const dd=PLAN.months[currentWorkout.month].days[currentWorkout.day];
   let total=0,done=0;
-  dd.exercises.forEach((ex,exIdx)=>{for(let s=0;s<(ex.sets||1);s++){total++;const chk=document.getElementById(`chk-${exIdx}-${s}`);if(chk&&chk.classList.contains('done'))done++;}});
+  dd.exercises.forEach((ex,exIdx)=>{for(let s=0;s<(ex.sets||1);s++){total++;const chk=document.getElementById(`chk-${exIdx}-${s}`);if(chk?.classList.contains('done'))done++;}});
   const pct=total>0?done/total*100:0;
   document.getElementById('workout-progress-fill').style.width=pct+'%';
   document.getElementById('top-progress-fill').style.width=pct+'%';
@@ -660,12 +752,12 @@ function updateProgress(){
 }
 
 function finishWorkout(){
-  // Show custom confirmation
   showConfirm(
     'Complete Workout?',
     'This will mark the session as done and save your log.',
     'Complete',
     ()=>{
+      stopTimer();
       const dd=PLAN.months[currentWorkout.month].days[currentWorkout.day];
       const logEntry={};let totalWeight=0,setsLogged=0;
       dd.exercises.forEach((ex,exIdx)=>{
@@ -684,8 +776,10 @@ function finishWorkout(){
       document.getElementById('complete-title').innerHTML='SESSION<br>DONE';
       document.getElementById('complete-sub').textContent=`Month ${currentWorkout.month}, Day ${currentWorkout.day} — logged ✓`;
       const avgW=setsLogged>0?Math.round(totalWeight/setsLogged):0;
-      const exDone=dd.exercises.filter((e,i)=>{for(let s=0;s<(e.sets||1);s++){const chk=document.getElementById(`chk-${i}-${s}`);if(chk?.classList.contains('done'))return true;}return false;}).length;
-      document.getElementById('complete-stats').innerHTML=`<div class="complete-stat"><div class="complete-stat-val">${dd.exercises.length}</div><div class="complete-stat-label">Exercises</div></div><div class="complete-stat"><div class="complete-stat-val">${setsLogged}</div><div class="complete-stat-label">Sets Logged</div></div><div class="complete-stat"><div class="complete-stat-val">${avgW||'—'}</div><div class="complete-stat-label">Avg Weight</div></div><div class="complete-stat"><div class="complete-stat-val">${exDone}</div><div class="complete-stat-label">Exercises Done</div></div>`;
+      const exDone=dd.exercises.filter((e,i)=>{for(let s=0;s<(e.sets||1);s++){if(document.getElementById(`chk-${i}-${s}`)?.classList.contains('done'))return true;}return false;}).length;
+      const timeStr=formatTime(timerSeconds);
+      document.getElementById('complete-stats').innerHTML=`<div class="complete-stat"><div class="complete-stat-val">${timeStr}</div><div class="complete-stat-label">Duration</div></div><div class="complete-stat"><div class="complete-stat-val">${setsLogged}</div><div class="complete-stat-label">Sets Logged</div></div><div class="complete-stat"><div class="complete-stat-val">${avgW||'—'}</div><div class="complete-stat-label">Avg Weight</div></div><div class="complete-stat"><div class="complete-stat-val">${exDone}</div><div class="complete-stat-label">Exercises Done</div></div>`;
+      resetTimer();
       goTo('complete-screen');
     }
   );
@@ -693,15 +787,15 @@ function finishWorkout(){
 
 function initBenchmarkScreen(){
   const content=document.getElementById('benchmark-content');content.innerHTML='';
-  const phases=['m1','m4','m8','m12'];const phaseLabels=['Month 1','Month 4','Month 8','Month 12'];
+  const phases=['m1','m4','m8','m12'],phaseLabels=['Month 1','Month 4','Month 8','Month 12'];
   BENCHMARKS.forEach(lift=>{
     const vals=state.benchmarks[lift.key]||{};
     const div=document.createElement('div');div.className='benchmark-lift';
-    let cellsHTML=phases.map((p,pi)=>{
+    const cellsHTML=phases.map((p,pi)=>{
       const val=vals[p]||'';
       const delta=pi>0&&vals[phases[0]]&&val?(parseFloat(val)-parseFloat(vals[phases[0]])):null;
-      const deltaHTML=delta!==null&&delta!==0?`<div class="bpc-delta">${delta>0?'+':''}${delta} lbs</div>`:'';
-      return`<div class="benchmark-phase-cell"><div class="bpc-label">${phaseLabels[pi]}</div><input type="number" class="bpc-input ${val?'filled':''}" value="${val}" placeholder="—" onchange="saveBenchmark('${lift.key}','${p}',this.value)" oninput="this.classList.toggle('filled',!!this.value)" onfocus="this.select()">${deltaHTML}</div>`;
+      const deltaHTML=delta!=null&&delta!==0?`<div class="bpc-delta">${delta>0?'+':''}${delta} lbs</div>`:'';
+      return`<div><div class="bpc-label">${phaseLabels[pi]}</div><input type="number" class="bpc-input ${val?'filled':''}" value="${val}" placeholder="—" onchange="saveBenchmark('${lift.key}','${p}',this.value)" oninput="this.classList.toggle('filled',!!this.value)" onfocus="this.select()">${deltaHTML}</div>`;
     }).join('');
     div.innerHTML=`<div class="benchmark-lift-name">${lift.name}</div><div class="benchmark-phases">${cellsHTML}</div>`;
     content.appendChild(div);
@@ -715,7 +809,7 @@ function saveBenchmark(key,phase,value){
 function initHistoryScreen(){
   const content=document.getElementById('history-content');content.innerHTML='';
   const keys=Object.keys(state.log).sort().reverse();
-  if(keys.length===0){content.innerHTML='<div class="empty-state"><div class="empty-state-icon">◳</div><div class="empty-state-text">No sessions logged yet.<br>Complete your first workout to see history here.</div></div>';return;}
+  if(!keys.length){content.innerHTML='<div class="empty-state"><div class="empty-state-icon">◳</div><div class="empty-state-text">No sessions logged yet.<br>Complete your first workout to see history here.</div></div>';return;}
   keys.forEach(key=>{
     const parts=key.split('_');const day=parts[parts.length-1];const date=parts.slice(0,3).join('-');
     const entry=state.log[key];const exercises=Object.keys(entry);
@@ -739,8 +833,7 @@ function initHistoryScreen(){
 
 // ---- Weight Tracking ----
 function initWeightScreen(){
-  const today=new Date().toISOString().split('T')[0];
-  document.getElementById('weight-date-input').value=today;
+  document.getElementById('weight-date-input').value=new Date().toISOString().split('T')[0];
   renderWeightScreen();
 }
 
@@ -749,7 +842,6 @@ function logWeight(){
   const date=document.getElementById('weight-date-input').value;
   if(!val||!date)return;
   if(!state.weightLog)state.weightLog=[];
-  // remove existing entry for same date
   state.weightLog=state.weightLog.filter(e=>e.date!==date);
   state.weightLog.push({date,weight:val});
   state.weightLog.sort((a,b)=>a.date.localeCompare(b.date));
@@ -760,8 +852,7 @@ function logWeight(){
 
 function deleteWeight(date){
   state.weightLog=state.weightLog.filter(e=>e.date!==date);
-  saveState();
-  renderWeightScreen();
+  saveState();renderWeightScreen();
 }
 
 function renderWeightScreen(){
@@ -769,177 +860,100 @@ function renderWeightScreen(){
   const chartWrap=document.getElementById('weight-chart-wrap');
   const logLabel=document.getElementById('weight-log-label');
   const logList=document.getElementById('weight-log-list');
-
-  if(log.length===0){
-    chartWrap.style.display='none';
-    logLabel.style.display='none';
+  if(!log.length){
+    chartWrap.style.display='none';logLabel.style.display='none';
     logList.innerHTML='<div class="empty-state"><div class="empty-state-icon">⚖</div><div class="empty-state-text">No entries yet.<br>Log your first weigh-in above.</div></div>';
     return;
   }
-
-  chartWrap.style.display='block';
-  logLabel.style.display='block';
-
+  chartWrap.style.display='block';logLabel.style.display='block';
   const weights=log.map(e=>e.weight);
   const first=weights[0],last=weights[weights.length-1];
   const min=Math.min(...weights),max=Math.max(...weights);
   const change=+(last-first).toFixed(1);
   const changeStr=(change>0?'+':'')+change;
   const changeColor=change<0?'var(--green)':change>0?'var(--red)':'var(--accent)';
-
   document.getElementById('weight-chart-sub').textContent=`${log.length} weigh-in${log.length!==1?'s':''}`;
-  document.getElementById('weight-chart-stats').innerHTML=`
-    <div class="wcs"><div class="wcs-val">${last}</div><div class="wcs-label">Current</div></div>
-    <div class="wcs"><div class="wcs-val" style="color:${changeColor}">${changeStr}</div><div class="wcs-label">Change</div></div>
-    <div class="wcs"><div class="wcs-val">${first}</div><div class="wcs-label">Start</div></div>`;
-
+  document.getElementById('weight-chart-stats').innerHTML=`<div class="wcs"><div class="wcs-val">${last}</div><div class="wcs-label">Current</div></div><div class="wcs"><div class="wcs-val" style="color:${changeColor}">${changeStr}</div><div class="wcs-label">Change</div></div><div class="wcs"><div class="wcs-val">${first}</div><div class="wcs-label">Start</div></div>`;
   // Draw chart
   const canvas=document.getElementById('weight-chart');
   const dpr=window.devicePixelRatio||1;
-  const displayW=canvas.parentElement.clientWidth-32;
-  const displayH=180;
-  canvas.style.width=displayW+'px';
-  canvas.style.height=displayH+'px';
-  canvas.width=displayW*dpr;
-  canvas.height=displayH*dpr;
-  const ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-
+  const displayW=canvas.parentElement.clientWidth-32,displayH=180;
+  canvas.style.width=displayW+'px';canvas.style.height=displayH+'px';
+  canvas.width=displayW*dpr;canvas.height=displayH*dpr;
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
   const pad={top:16,right:16,bottom:28,left:42};
-  const W=displayW-pad.left-pad.right;
-  const H=displayH-pad.top-pad.bottom;
-  const range=max-min||1;
-  const yMin=min-range*0.1,yMax=max+range*0.1;
-
-  const xPos=i=>pad.left+( log.length>1?i/(log.length-1)*W:W/2 );
+  const W=displayW-pad.left-pad.right,H=displayH-pad.top-pad.bottom;
+  const range=max-min||1;const yMin=min-range*0.1,yMax=max+range*0.1;
+  const xPos=i=>pad.left+(log.length>1?i/(log.length-1)*W:W/2);
   const yPos=v=>pad.top+H-(v-yMin)/(yMax-yMin)*H;
-
-  // Grid lines
   ctx.strokeStyle='#2a2a2a';ctx.lineWidth=1;
-  const steps=4;
-  for(let i=0;i<=steps;i++){
-    const y=pad.top+i*(H/steps);
+  for(let i=0;i<=4;i++){
+    const y=pad.top+i*(H/4);
     ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+W,y);ctx.stroke();
-    const val=yMax-(i/steps)*(yMax-yMin);
-    ctx.fillStyle='#555';ctx.font=`${10*dpr/dpr}px sans-serif`;ctx.textAlign='right';
-    ctx.fillText(val.toFixed(1),pad.left-5,y+4);
+    ctx.fillStyle='#555';ctx.font='10px sans-serif';ctx.textAlign='right';
+    ctx.fillText((yMax-(i/4)*(yMax-yMin)).toFixed(1),pad.left-5,y+4);
   }
-
-  // X axis labels (show first, last, and a few in between)
   const labelIdxs=log.length<=6?log.map((_,i)=>i):[0,...[1,2,3].map(i=>Math.round(i*(log.length-1)/3)),log.length-1].filter((v,i,a)=>a.indexOf(v)===i);
-  ctx.fillStyle='#555';ctx.textAlign='center';ctx.font=`${9*dpr/dpr}px sans-serif`;
-  labelIdxs.forEach(i=>{
-    const d=new Date(log[i].date+'T12:00:00');
-    const label=`${d.getMonth()+1}/${d.getDate()}`;
-    ctx.fillText(label,xPos(i),pad.top+H+18);
-  });
-
-  // Gradient fill
+  ctx.fillStyle='#555';ctx.textAlign='center';ctx.font='9px sans-serif';
+  labelIdxs.forEach(i=>{const d=new Date(log[i].date+'T12:00:00');ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`,xPos(i),pad.top+H+18);});
   if(log.length>1){
     const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+H);
-    grad.addColorStop(0,'rgba(232,255,0,0.18)');
-    grad.addColorStop(1,'rgba(232,255,0,0)');
-    ctx.beginPath();
-    ctx.moveTo(xPos(0),yPos(log[0].weight));
+    grad.addColorStop(0,'rgba(232,255,0,0.18)');grad.addColorStop(1,'rgba(232,255,0,0)');
+    ctx.beginPath();ctx.moveTo(xPos(0),yPos(log[0].weight));
     log.forEach((e,i)=>{if(i>0)ctx.lineTo(xPos(i),yPos(e.weight));});
-    ctx.lineTo(xPos(log.length-1),pad.top+H);
-    ctx.lineTo(xPos(0),pad.top+H);
-    ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+    ctx.lineTo(xPos(log.length-1),pad.top+H);ctx.lineTo(xPos(0),pad.top+H);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
   }
-
-  // Line
   ctx.beginPath();ctx.strokeStyle='#e8ff00';ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';
-  log.forEach((e,i)=>{i===0?ctx.moveTo(xPos(i),yPos(e.weight)):ctx.lineTo(xPos(i),yPos(e.weight));});
-  ctx.stroke();
-
-  // Dots
-  log.forEach((e,i)=>{
-    ctx.beginPath();ctx.arc(xPos(i),yPos(e.weight),3.5,0,Math.PI*2);
-    ctx.fillStyle='#e8ff00';ctx.fill();
-  });
-
-  // Log list (newest first)
+  log.forEach((e,i)=>{i===0?ctx.moveTo(xPos(i),yPos(e.weight)):ctx.lineTo(xPos(i),yPos(e.weight));});ctx.stroke();
+  log.forEach((e,i)=>{ctx.beginPath();ctx.arc(xPos(i),yPos(e.weight),3.5,0,Math.PI*2);ctx.fillStyle='#e8ff00';ctx.fill();});
   const reversed=[...log].reverse();
   logList.innerHTML=reversed.map((e,i)=>{
-    const prev=reversed[i+1];
-    const delta=prev?+(e.weight-prev.weight).toFixed(1):null;
-    const deltaHTML=delta!==null?`<span class="weight-log-delta" style="color:${delta<0?'var(--green)':delta>0?'var(--red)':'var(--text-muted)'}">${delta>0?'+':''}${delta}</span>`:'';
+    const prev=reversed[i+1];const delta=prev?+(e.weight-prev.weight).toFixed(1):null;
+    const deltaHTML=delta!=null?`<span class="weight-log-delta" style="color:${delta<0?'var(--green)':delta>0?'var(--red)':'var(--text-muted)'}">${delta>0?'+':''}${delta}</span>`:'';
     const d=new Date(e.date+'T12:00:00');
-    const dateStr=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-    return`<div class="weight-log-item">
-      <div class="weight-log-date">${dateStr}</div>
-      <div style="display:flex;align-items:baseline;gap:2px">
-        <div class="weight-log-val">${e.weight}</div>
-        <div style="font-size:11px;color:var(--text-muted)">lbs</div>
-        ${deltaHTML}
-        <button class="weight-log-delete" onclick="deleteWeight('${e.date}')" title="Delete">×</button>
-      </div>
-    </div>`;
+    return`<div class="weight-log-item"><div class="weight-log-date">${d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</div><div style="display:flex;align-items:baseline;gap:2px"><div class="weight-log-val">${e.weight}</div><div style="font-size:11px;color:var(--text-muted)">lbs</div>${deltaHTML}<button class="weight-log-delete" onclick="deleteWeight('${e.date}')" title="Delete">×</button></div></div>`;
   }).join('');
 }
 
 // ---- Settings ----
 function initSettingsScreen(){
   const sub=document.getElementById('settings-start-date-sub');
-  if(state.startDate){
-    const d=new Date(state.startDate+'T12:00:00');
-    sub.textContent='Started '+d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  } else {
-    sub.textContent='Not set';
-  }
+  if(state.startDate){const d=new Date(state.startDate+'T12:00:00');sub.textContent='Started '+d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});}
+  else sub.textContent='Not set';
 }
-
 function exportData(){
-  const dataStr=JSON.stringify(state,null,2);
-  const blob=new Blob([dataStr],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  const date=new Date().toISOString().split('T')[0];
-  a.href=url;a.download=`stefan-workout-backup-${date}.json`;
-  document.body.appendChild(a);a.click();
-  document.body.removeChild(a);URL.revokeObjectURL(url);
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download=`stefan-workout-backup-${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
-
 function importData(event){
-  const file=event.target.files[0];
-  if(!file)return;
+  const file=event.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=async(e)=>{
     try{
       const imported=JSON.parse(e.target.result);
-      if(!imported||typeof imported!=='object')throw new Error('Invalid');
+      if(!imported||typeof imported!=='object')throw 0;
       if(!confirm('Import this backup? This will replace all current data.'))return;
-      state=imported;
-      await saveState();
-      initHomeScreen();
-      alert('Data imported successfully!');
-      navTo('home-screen','nav-home');
-    }catch(err){alert('Could not read backup file. Make sure it\'s a valid export.');}
+      state=imported;await saveState();initHomeScreen();alert('Data imported successfully!');navTo('home-screen','nav-home');
+    }catch(err){alert('Could not read backup file.');}
   };
-  reader.readAsText(file);
-  event.target.value='';
+  reader.readAsText(file);event.target.value='';
 }
-
 function changeStartDate(){
-  const current=state.startDate||'';
-  const newDate=prompt('Enter new start date (YYYY-MM-DD):',current);
-  if(!newDate||newDate===current)return;
+  const newDate=prompt('Enter new start date (YYYY-MM-DD):',state.startDate||'');
+  if(!newDate||newDate===state.startDate)return;
   if(!/^\d{4}-\d{2}-\d{2}$/.test(newDate)){alert('Invalid date format. Use YYYY-MM-DD');return;}
-  state.startDate=newDate;
-  saveState();
-  initSettingsScreen();
-  alert('Start date updated.');
+  state.startDate=newDate;saveState();initSettingsScreen();alert('Start date updated.');
 }
-
 function resetAllData(){
   if(!confirm('Are you sure? This will delete ALL your workout logs, PRs, weight entries, and progress. This cannot be undone.'))return;
   if(!confirm('Really sure? Export a backup first if you want to keep your data.'))return;
   state={startDate:state.startDate,log:{},benchmarks:{},completedDays:{},weightLog:[]};
-  saveState();
-  alert('All data cleared.');
-  navTo('home-screen','nav-home');
+  saveState();alert('All data cleared.');navTo('home-screen','nav-home');
 }
 
+// ---- Confirm modal ----
 let confirmCallback=null;
 function showConfirm(title,body,confirmLabel,onConfirm){
   document.getElementById('modal-title').textContent=title;
@@ -948,167 +962,70 @@ function showConfirm(title,body,confirmLabel,onConfirm){
   confirmCallback=onConfirm;
   document.getElementById('confirm-modal').classList.add('active');
 }
-function closeConfirm(){
-  document.getElementById('confirm-modal').classList.remove('active');
-  confirmCallback=null;
-}
-document.getElementById('confirm-modal').addEventListener('click',function(e){
-  if(e.target===this)closeConfirm();
-});
-function confirmAction(){
-  if(confirmCallback)confirmCallback();
-  closeConfirm();
-}
+function closeConfirm(){document.getElementById('confirm-modal').classList.remove('active');confirmCallback=null;}
+document.getElementById('confirm-modal').addEventListener('click',function(e){if(e.target===this)closeConfirm();});
+function confirmAction(){if(confirmCallback)confirmCallback();closeConfirm();}
 
-async function init(){
-  await loadState();
-  const today=new Date().toISOString().split('T')[0];
-  document.getElementById('start-date-input').value=today;
-  if(state.startDate){initHomeScreen();goTo('home-screen');document.getElementById('bottom-nav').classList.add('visible');document.getElementById('nav-home').classList.add('active');}
-}
-
+// ---- Plan browser ----
 function initPlanScreen(){
-  const content=document.getElementById('plan-content');
-  content.innerHTML='';
+  const content=document.getElementById('plan-content');content.innerHTML='';
   document.getElementById('plan-screen-title').textContent='The Plan';
-
-  // --- Progress bar ---
-  const totalSessions=48; // 12 months × 4 weeks × (A+B = 2 required), but we count all A+B completions
-  // Count completed A and B days (required), C is bonus
   let totalRequired=0,totalDone=0;
   const phaseProgress=PHASES.map(phase=>{
     let req=0,done=0;
-    phase.months.forEach(m=>{
-      [1,2,3,4].forEach(w=>{
-        ['A','B'].forEach(d=>{
-          req++;
-          if(state.completedDays[`${m}_${w}_${d}`])done++;
-        });
-      });
-    });
-    totalRequired+=req;totalDone+=done;
-    return{phase,req,done};
+    phase.months.forEach(m=>{[1,2,3,4].forEach(w=>{['A','B'].forEach(d=>{req++;if(state.completedDays[`${m}_${w}_${d}`])done++;});});});
+    totalRequired+=req;totalDone+=done;return{phase,req,done};
   });
-  const phaseDotColors=['var(--phase1)','var(--phase2)','var(--phase3)'];
-  const phaseBarColors=['#e8ff00','#ff8c00','#00d4ff'];
-  const phaseRowsHTML=phaseProgress.map((pp,pi)=>`
-    <div class="plan-phase-row">
-      <div class="plan-phase-row-label" style="color:${phaseDotColors[pi]}">P${pp.phase.num}</div>
-      <div class="plan-phase-mini-track"><div class="plan-phase-mini-fill" style="width:${pp.req>0?Math.round(pp.done/pp.req*100):0}%;background:${phaseBarColors[pi]}"></div></div>
-      <div class="plan-phase-row-count">${pp.done}/${pp.req}</div>
-    </div>`).join('');
-  const progressWrap=document.createElement('div');
-  progressWrap.className='plan-progress-wrap';
-  progressWrap.innerHTML=`
-    <div class="plan-progress-top">
-      <div class="plan-progress-title">Overall Progress</div>
-      <div class="plan-progress-count">${totalDone} / ${totalRequired} sessions</div>
-    </div>
-    <div class="plan-overall-track"><div class="plan-overall-fill" style="width:${totalRequired>0?Math.round(totalDone/totalRequired*100):0}%"></div></div>
-    <div class="plan-phase-rows">${phaseRowsHTML}</div>`;
-  content.appendChild(progressWrap);
-
-  // --- Phase/month cards ---
-  const phaseCardColors=['phase-1','phase-2','phase-3'];
+  const dotC=['var(--phase1)','var(--phase2)','var(--phase3)'],barC=['#e8ff00','#ff8c00','#00d4ff'],pcC=['phase-1','phase-2','phase-3'];
+  const phaseRowsHTML=phaseProgress.map((pp,pi)=>`<div class="plan-phase-row"><div class="plan-phase-row-label" style="color:${dotC[pi]}">P${pp.phase.num}</div><div class="plan-phase-mini-track"><div class="plan-phase-mini-fill" style="width:${pp.req>0?Math.round(pp.done/pp.req*100):0}%;background:${barC[pi]}"></div></div><div class="plan-phase-row-count">${pp.done}/${pp.req}</div></div>`).join('');
+  const pw=document.createElement('div');pw.className='plan-progress-wrap';
+  pw.innerHTML=`<div class="plan-progress-top"><div class="plan-progress-title">Overall Progress</div><div class="plan-progress-count">${totalDone} / ${totalRequired} sessions</div></div><div class="plan-overall-track"><div class="plan-overall-fill" style="width:${totalRequired>0?Math.round(totalDone/totalRequired*100):0}%"></div></div><div class="plan-phase-rows">${phaseRowsHTML}</div>`;
+  content.appendChild(pw);
   PHASES.forEach((phase,pi)=>{
-    const block=document.createElement('div');
-    block.className='phase-block';
+    const block=document.createElement('div');block.className='phase-block';
     const monthCards=phase.months.map(m=>{
-      const md=PLAN.months[m];
-      // count completion for this month
-      let mReq=0,mDone=0;
+      const md=PLAN.months[m];let mReq=0,mDone=0;
       [1,2,3,4].forEach(w=>['A','B'].forEach(d=>{mReq++;if(state.completedDays[`${m}_${w}_${d}`])mDone++;}));
-      const mPct=Math.round(mDone/mReq*100);
-      return`<div class="month-card ${phaseCardColors[pi]}-card" onclick="showMonthDetail(${m})">
-        <div class="month-card-num">Month ${m}</div>
-        <div class="month-card-name">${md.name}</div>
-        <div style="margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${mPct}%;background:${phaseBarColors[pi]};border-radius:2px"></div></div>
-        <div class="month-card-arrow" style="margin-top:6px">${mDone}/${mReq} · View →</div>
-      </div>`;
+      return`<div class="month-card ${pcC[pi]}-card" onclick="showMonthDetail(${m})"><div class="month-card-num">Month ${m}</div><div class="month-card-name">${md.name}</div><div style="margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.round(mDone/mReq*100)}%;background:${barC[pi]};border-radius:2px"></div></div><div class="month-card-arrow" style="margin-top:6px">${mDone}/${mReq} · View →</div></div>`;
     }).join('');
-    block.innerHTML=`
-      <div class="phase-block-header">
-        <div class="phase-dot" style="background:${phaseDotColors[pi]}"></div>
-        <div class="phase-block-title ${phaseCardColors[pi]}">Phase ${phase.num} — ${phase.name}</div>
-      </div>
-      <div class="month-grid">${monthCards}</div>`;
+    block.innerHTML=`<div class="phase-block-header"><div class="phase-dot" style="background:${dotC[pi]}"></div><div class="phase-block-title ${pcC[pi]}">Phase ${phase.num} — ${phase.name}</div></div><div class="month-grid">${monthCards}</div>`;
     content.appendChild(block);
   });
 }
 
 function showMonthDetail(monthNum){
-  const md=PLAN.months[monthNum];
-  const phase=PHASES.find(p=>p.months.includes(monthNum));
-  const phaseColors=['phase-1','phase-2','phase-3'];
-  const pc=phaseColors[phase.num-1];
-  const weekFocus=[
-    ['Orientation','Technique Lock-In','Progressive Load','Deload'],
-    ['Volume Increase','Progressive Overload','Intensity Surge','Deload'],
-    ['5x5 Strength Start','Load Progression','Peak Sets','Deload + Assess'],
-    ['Peaking','PR Attempts','Phase Tests','Phase Close'],
-    ['Establish Weights','Progressive Overload','Intensity Surge','Deload'],
-    ['Strength Loading','Progressive Overload','Intensity Surge','Deload'],
-    ['Intensity Peak','Load Progression','Peak Sets','Deload'],
-    ['Full Test','Full Test','Full Test','Deload'],
-    ['Transition','Build','Peak','Deload'],
-    ['Definition Push','Build','Peak','Deload'],
-    ['Final Build','Final Build','Peak','Deload'],
-    ['Year-End Peak','PR Test','Celebration','Deload'],
-  ];
-  const focuses=weekFocus[monthNum-1]||['Week 1','Week 2','Week 3','Week 4'];
-
+  const md=PLAN.months[monthNum];const phase=PHASES.find(p=>p.months.includes(monthNum));
+  const focuses=[
+    ['Orientation','Technique Lock-In','Progressive Load','Deload'],['Volume Increase','Progressive Overload','Intensity Surge','Deload'],
+    ['5x5 Strength Start','Load Progression','Peak Sets','Deload + Assess'],['Peaking','PR Attempts','Phase Tests','Phase Close'],
+    ['Establish Weights','Progressive Overload','Intensity Surge','Deload'],['Strength Loading','Progressive Overload','Intensity Surge','Deload'],
+    ['Intensity Peak','Load Progression','Peak Sets','Deload'],['Full Test','Full Test','Full Test','Deload'],
+    ['Transition','Build','Peak','Deload'],['Definition Push','Build','Peak','Deload'],
+    ['Final Build','Final Build','Peak','Deload'],['Year-End Peak','PR Test','Celebration','Deload']
+  ][monthNum-1]||['Week 1','Week 2','Week 3','Week 4'];
   const content=document.getElementById('plan-content');
-  content.innerHTML=`
-    <button class="plan-back-btn" onclick="initPlanScreen();document.getElementById('plan-screen-title').textContent='The Plan'">← All Phases</button>
-    <div style="margin-bottom:6px"><span class="plan-screen-tag" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--text-muted)">Phase ${phase.num} · Month ${monthNum}</span></div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;margin-bottom:20px">${md.name.toUpperCase()}</div>
-    <div id="weeks-list"></div>`;
+  content.innerHTML=`<button class="plan-back-btn" onclick="initPlanScreen();document.getElementById('plan-screen-title').textContent='The Plan'">← All Phases</button><div style="margin-bottom:6px"><span class="plan-screen-tag">Phase ${phase.num} · Month ${monthNum}</span></div><div style="font-family:var(--bc);font-size:28px;font-weight:900;margin-bottom:20px">${md.name.toUpperCase()}</div><div id="weeks-list"></div>`;
   document.getElementById('plan-screen-title').textContent=`Month ${monthNum}`;
-
   const weeksList=document.getElementById('weeks-list');
   [1,2,3,4].forEach(w=>{
-    const isDeload=w===4;
-    const block=document.createElement('div');
-    block.className='week-block';
-    const bodyId=`wb-body-${w}`;
-    const chevId=`wb-chev-${w}`;
-    block.innerHTML=`
-      <div class="week-block-header" onclick="toggleWeek(${w},'${bodyId}','${chevId}')">
-        <div>
-          <div class="week-block-title">Week ${w}${isDeload?' — Deload':''}</div>
-          <div class="week-block-meta">${focuses[w-1]}</div>
-        </div>
-        <div class="week-block-chevron" id="${chevId}">›</div>
-      </div>
-      <div class="week-block-body" id="${bodyId}">
-        ${buildDayTabs(monthNum,w,pc)}
-      </div>`;
+    const block=document.createElement('div');block.className='week-block';
+    const bodyId=`wb-body-${w}`,chevId=`wb-chev-${w}`;
+    block.innerHTML=`<div class="week-block-header" onclick="toggleWeek('${bodyId}','${chevId}')"><div><div class="week-block-title">Week ${w}${w===4?' — Deload':''}</div><div class="week-block-meta">${focuses[w-1]}</div></div><div class="week-block-chevron" id="${chevId}">›</div></div><div class="week-block-body" id="${bodyId}">${buildDayTabs(monthNum,w)}</div>`;
     weeksList.appendChild(block);
   });
 }
 
-function toggleWeek(w,bodyId,chevId){
-  const body=document.getElementById(bodyId);
-  const chev=document.getElementById(chevId);
-  const isOpen=body.classList.toggle('open');
-  chev.classList.toggle('open',isOpen);
+function toggleWeek(bodyId,chevId){
+  document.getElementById(bodyId).classList.toggle('open');
+  document.getElementById(chevId).classList.toggle('open');
 }
 
-function buildDayTabs(monthNum,week,pc){
+function buildDayTabs(monthNum,week){
   const days=['A','B','C'];
   const tabsHTML=days.map((d,i)=>`<div class="day-tab${i===0?' active':''}" onclick="switchDayTab(${monthNum},${week},'${d}',this)">Day ${d}</div>`).join('');
   const panelsHTML=days.map((d,i)=>{
     const dd=PLAN.months[monthNum].days[d];
-    const exRows=dd.exercises.map(ex=>`
-      <div class="plan-exercise-row">
-        <div class="plan-ex-name">${ex.name}${ex.superset?'<span class="plan-ex-ss">SS</span>':''}</div>
-        <div class="plan-ex-specs">
-          <div class="plan-ex-spec"><div class="plan-ex-spec-label">Sets</div><div class="plan-ex-spec-val">${ex.sets||'—'}</div></div>
-          <div class="plan-ex-spec"><div class="plan-ex-spec-label">Reps</div><div class="plan-ex-spec-val">${ex.reps}</div></div>
-          <div class="plan-ex-spec"><div class="plan-ex-spec-label">Rest</div><div class="plan-ex-spec-val">${ex.rest}</div></div>
-        </div>
-        <div class="plan-ex-note">${ex.note}</div>
-      </div>`).join('');
+    const exRows=dd.exercises.map(ex=>`<div class="plan-exercise-row"><div class="plan-ex-name">${ex.name}${ex.superset?'<span class="plan-ex-ss">SS</span>':''}</div><div class="plan-ex-specs"><div class="plan-ex-spec"><div class="plan-ex-spec-label">Sets</div><div class="plan-ex-spec-val">${ex.sets||'—'}</div></div><div class="plan-ex-spec"><div class="plan-ex-spec-label">Reps</div><div class="plan-ex-spec-val">${ex.reps}</div></div><div class="plan-ex-spec"><div class="plan-ex-spec-label">Rest</div><div class="plan-ex-spec-val">${ex.rest}</div></div></div><div class="plan-ex-note">${ex.note}</div></div>`).join('');
     const deloadNote=week===4?'<div style="font-size:12px;color:#ff8c00;background:#ff8c0011;border:1px solid #ff8c0033;border-radius:6px;padding:10px 12px;margin-bottom:12px">⚠ Deload week — reduce all loads by 40%</div>':'';
     const bonusNote=dd.bonus?'<div style="font-size:11px;color:var(--text-muted);margin-bottom:10px;letter-spacing:1px">OPTIONAL BONUS DAY</div>':'';
     return`<div class="day-panel${i===0?' active':''}" id="panel-${monthNum}-${week}-${d}">${deloadNote}${bonusNote}${exRows}</div>`;
@@ -1117,13 +1034,15 @@ function buildDayTabs(monthNum,week,pc){
 }
 
 function switchDayTab(monthNum,week,day,tabEl){
-  const strip=tabEl.parentElement;
-  strip.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  tabEl.parentElement.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
   tabEl.classList.add('active');
-  ['A','B','C'].forEach(d=>{
-    const p=document.getElementById(`panel-${monthNum}-${week}-${d}`);
-    if(p)p.classList.toggle('active',d===day);
-  });
+  ['A','B','C'].forEach(d=>{const p=document.getElementById(`panel-${monthNum}-${week}-${d}`);if(p)p.classList.toggle('active',d===day);});
+}
+
+async function init(){
+  await loadState();
+  document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];
+  if(state.startDate){initHomeScreen();goTo('home-screen');document.getElementById('bottom-nav').classList.add('visible');document.getElementById('nav-home').classList.add('active');}
 }
 init();
 </script>
