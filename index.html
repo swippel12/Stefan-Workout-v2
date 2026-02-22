@@ -11,12 +11,12 @@
 <title>Stefan Workout</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#282828;--border:#2a2a2a;--text:#f0f0f0;--text-dim:#888;--text-muted:#555;--accent:#e8ff00;--accent-dim:#b5c700;--red:#ff4444;--green:#44ff88;--phase1:#e8ff00;--phase2:#ff8c00;--phase3:#00d4ff;--bc:'Barlow Condensed',sans-serif;--b:'Barlow',sans-serif}
+  :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#282828;--border:#2a2a2a;--text:#f0f0f0;--text-dim:#888;--text-muted:#555;--accent:#e8ff00;--accent-dim:#b5c700;--red:#ff4444;--green:#44ff88;--phase1:#e8ff00;--phase2:#ff8c00;--phase3:#00d4ff;--bc:'Barlow Condensed',sans-serif;--b:'Barlow',sans-serif;--sat:env(safe-area-inset-top, 44px);--sab:env(safe-area-inset-bottom, 16px)}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--b);overflow:hidden}
   .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
   .screen.active{display:flex;animation:fadeIn .2s ease}
-  #workout-screen{position:absolute;top:0;left:0;right:0;bottom:60px;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
+  #workout-screen{position:absolute;top:0;left:0;right:0;bottom:calc(44px + var(--sab));display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
   #setup-screen{align-items:center;justify-content:center;padding:32px 28px;background:linear-gradient(160deg,#0a0a0a 0%,#111 100%)}
@@ -28,7 +28,7 @@
   .btn-primary{width:100%;background:var(--accent);color:#000;font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}
   .btn-primary:active{opacity:.8}
   #home-screen{background:var(--bg)}
-  .home-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .home-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .home-phase-label{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
   .home-title{font-family:var(--bc);font-size:40px;font-weight:900;line-height:1;letter-spacing:-1px}
   .home-meta{font-size:13px;color:var(--text-dim);margin-top:4px}
@@ -62,24 +62,23 @@
   .benchmark-mini-label{font-size:10px;color:var(--text-muted);margin-bottom:2px}
   .benchmark-mini-val{font-family:var(--bc);font-size:16px;font-weight:700;color:var(--text-dim)}
   .benchmark-mini-val.filled{color:var(--accent)}
-  .workout-header{padding:44px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-  .workout-back{font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:var(--b)}
+  .workout-header{padding:calc(var(--sat) + 8px) 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .workout-back{font-size:15px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:10px;background:none;border:none;color:var(--text-dim);font-family:var(--b);padding:10px 14px 10px 0;min-height:44px;min-width:44px;transition:color .15s}
   .workout-back:active{color:var(--text)}
   .workout-day-tag{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
   .workout-title{font-family:var(--bc);font-size:30px;font-weight:900;line-height:1}
   .workout-progress-bar{height:3px;background:var(--surface3);margin-top:14px;border-radius:2px;overflow:hidden}
   .workout-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
   .workout-content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
-  .top-progress-wrap{background:var(--bg);padding:10px 20px 4px;flex-shrink:0;border-bottom:1px solid var(--border)}
   .top-progress-track{height:6px;background:var(--surface3);border-radius:3px;overflow:hidden}
   .top-progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .35s ease;width:0%}
   .top-progress-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-muted);text-transform:uppercase;text-align:right;margin-top:5px;margin-bottom:2px}
-  /* Timer bar */
-  .timer-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
-  .timer-display{font-family:var(--bc);font-size:28px;font-weight:900;color:var(--accent);letter-spacing:2px}
+  /* Timer bar — compact */
+  .timer-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0}
+  .timer-display{font-family:var(--bc);font-size:24px;font-weight:900;color:var(--accent);letter-spacing:2px}
   .timer-controls{display:flex;gap:8px}
-  .timer-btn{background:var(--surface3);border:1px solid var(--border);color:var(--text);font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;border-radius:6px;cursor:pointer;transition:background .15s,border-color .15s}
-  .timer-btn:active{background:var(--surface2)}
+  .timer-btn{background:var(--surface3);border:1px solid var(--border);color:var(--text);font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 14px;border-radius:6px;cursor:pointer;transition:background .15s,border-color .15s,transform .1s}
+  .timer-btn:active{background:var(--surface2);transform:scale(0.93)}
   .timer-btn.running{border-color:var(--accent);color:var(--accent)}
   .timer-btn.paused{border-color:var(--phase2);color:var(--phase2)}
   .exercise-item{border-bottom:1px solid var(--border);padding:16px 0}
@@ -124,7 +123,7 @@
   .complete-stat-val{font-family:var(--bc);font-size:28px;font-weight:900;color:var(--accent)}
   .complete-stat-label{font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
   #benchmark-screen{background:var(--bg)}
-  .benchmark-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .benchmark-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .benchmark-content{flex:1;overflow-y:auto;padding:16px 20px 80px}
   .benchmark-lift{border-bottom:1px solid var(--border);padding:16px 0}
   .benchmark-lift:last-child{border-bottom:none}
@@ -137,7 +136,7 @@
   .bpc-input.filled{color:var(--accent);border-color:var(--surface3)}
   .bpc-delta{font-size:10px;text-align:center;margin-top:3px;font-weight:600;color:var(--green)}
   #history-screen{background:var(--bg)}
-  .history-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .history-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .history-content{flex:1;overflow-y:auto;padding:16px 20px 80px}
   .history-session{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
   .history-session-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -146,7 +145,7 @@
   .history-exercise-row{display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid var(--border)}
   .history-ex-name{font-size:12px;color:var(--text-dim)}
   .history-ex-vals{font-size:12px;color:var(--accent-dim);font-weight:600}
-  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:none;padding:8px 0 0;padding-bottom:env(safe-area-inset-bottom, 16px);z-index:100}
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:none;padding:8px 0 0;padding-bottom:var(--sab);z-index:100}
   .bottom-nav.visible{display:flex}
   .nav-items{display:flex;width:100%}
   .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:3px 0;background:none;border:none;color:var(--text-muted);font-family:var(--b);font-size:9px;letter-spacing:1px;text-transform:uppercase;transition:color .15s}
@@ -159,7 +158,7 @@
   .empty-state-icon{font-size:40px;margin-bottom:14px}
   .empty-state-text{font-size:14px;color:var(--text-muted)}
   #plan-screen{background:var(--bg)}
-  .plan-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between}
+  .plan-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between}
   .plan-back-btn{font-size:13px;cursor:pointer;background:none;border:none;color:var(--text-dim);font-family:var(--b);padding:0;margin-bottom:6px;display:block}
   .plan-back-btn:active{color:var(--text)}
   .plan-screen-tag{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
@@ -215,7 +214,7 @@
   .plan-phase-mini-fill{height:100%;border-radius:3px;transition:width .4s ease}
   .plan-phase-row-count{font-family:var(--bc);font-size:12px;color:var(--text-muted);width:36px;text-align:right;flex-shrink:0}
   #weight-screen{background:var(--bg)}
-  .weight-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .weight-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .weight-content{flex:1;overflow-y:auto;padding:16px 20px 90px}
   .weight-log-form{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
   .weight-form-row{display:flex;gap:10px;align-items:flex-end}
@@ -254,7 +253,7 @@
   .modal-btn-cancel{background:var(--surface3);color:var(--text-dim)}
   .modal-btn-confirm{background:var(--accent);color:#000}
   #settings-screen{background:var(--bg)}
-  .settings-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+  .settings-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .settings-content{flex:1;overflow-y:auto;padding:16px 20px 90px}
   .settings-section{margin-bottom:28px}
   .settings-section-label{font-family:var(--bc);font-size:10px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px}
@@ -318,14 +317,14 @@
   </div>
   <div class="timer-bar" id="timer-bar">
     <div class="timer-display" id="timer-display">00:00</div>
+    <div style="flex:1;margin:0 14px">
+      <div class="top-progress-label" id="top-progress-label" style="margin:0 0 3px 0">0 / 0 SETS</div>
+      <div class="top-progress-track"><div class="top-progress-fill" id="top-progress-fill"></div></div>
+    </div>
     <div class="timer-controls">
       <button class="timer-btn" id="timer-toggle-btn" onclick="toggleTimer()">START</button>
       <button class="timer-btn" id="timer-reset-btn" onclick="resetTimer()">RESET</button>
     </div>
-  </div>
-  <div class="top-progress-wrap">
-    <div class="top-progress-label" id="top-progress-label">0 / 0 SETS</div>
-    <div class="top-progress-track"><div class="top-progress-fill" id="top-progress-fill"></div></div>
   </div>
   <div class="workout-content" id="workout-content"></div>
   <div class="workout-footer">
@@ -701,6 +700,8 @@ function startWorkout(month,week,day){
     content.appendChild(exDiv);
   });
   updateProgress();goTo('workout-screen');
+  // Scroll to top on workout start
+  setTimeout(()=>{document.getElementById('workout-content').scrollTop=0;},50);
 }
 
 function undoDay(sk){delete state.completedDays[sk];saveState();initHomeScreen();}
@@ -1043,6 +1044,12 @@ async function init(){
   await loadState();
   document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];
   if(state.startDate){initHomeScreen();goTo('home-screen');document.getElementById('bottom-nav').classList.add('visible');document.getElementById('nav-home').classList.add('active');}
+  // Fix 6: Scroll inputs into view on focus to prevent keyboard overlap on iPhone
+  document.addEventListener('focus',function(e){
+    if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'){
+      setTimeout(()=>{e.target.scrollIntoView({behavior:'smooth',block:'center'});},300);
+    }
+  },true);
 }
 init();
 </script>
