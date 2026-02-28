@@ -17,13 +17,13 @@
   #workout-screen{position:absolute;top:0;left:0;right:0;bottom:calc(44px + var(--sab));display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
-  #setup-screen{align-items:center;justify-content:center;padding:32px 28px;background:linear-gradient(160deg,#0a0a0a 0%,#111 100%)}
+  #setup-screen{align-items:center;justify-content:center;padding:32px 28px;padding-bottom:calc(32px + var(--sab));background:linear-gradient(160deg,#0a0a0a 0%,#111 100%);z-index:50}
   .setup-logo{font-family:var(--bc);font-size:64px;font-weight:900;line-height:.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
   .setup-sub{font-family:var(--bc);font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
   .setup-label{font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;align-self:flex-start;width:100%}
   .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--b);font-size:16px;padding:14px 16px;border-radius:6px;margin-bottom:28px;-webkit-appearance:none}
   .setup-input:focus{outline:none;border-color:var(--accent)}
-  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}
+  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s;position:relative;z-index:51;-webkit-appearance:none;touch-action:manipulation}
   .btn-primary:active{opacity:.8}
   #home-screen{background:var(--bg)}
   .home-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -342,6 +342,7 @@
   <div class="setup-sub">Training Plan</div>
   <div class="setup-label">Start Date</div>
   <input type="date" class="setup-input" id="start-date-input">
+  <script>document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];</script>
   <button class="btn-primary" onclick="setupPlan()">Begin Training</button>
 </div><div id="home-screen" class="screen">
   <div class="home-header">
@@ -660,8 +661,11 @@ return{week,month,weekInMonth,isDeload:weekInMonth===4,phase:PHASES.find(p=>p.mo
 }
 
 function setupPlan(){
-const val=document.getElementById(‘start-date-input’).value;
-if(!val)return;
+let val=document.getElementById(‘start-date-input’).value;
+if(!val){
+val=new Date().toISOString().split(‘T’)[0];
+document.getElementById(‘start-date-input’).value=val;
+}
 state.startDate=val;saveState();
 initHomeScreen();goTo(‘home-screen’);
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
