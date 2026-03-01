@@ -12,8 +12,8 @@
   :root{--bg:#0a0a0a;--surface:#141414;--surface2:#1e1e1e;--surface3:#282828;--border:#2a2a2a;--text:#f0f0f0;--text-dim:#888;--text-muted:#555;--accent:#e8ff00;--accent-dim:#b5c700;--red:#ff4444;--green:#44ff88;--phase1:#e8ff00;--phase2:#ff8c00;--phase3:#00d4ff;--bc:'Barlow Condensed',sans-serif;--b:'Barlow',sans-serif;--sat:env(safe-area-inset-top, 44px);--sab:env(safe-area-inset-bottom, 16px)}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--b);overflow:hidden}
-  .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
-  .screen.active{display:flex;animation:fadeIn .2s ease}
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;pointer-events:none}
+  .screen.active{display:flex;animation:fadeIn .2s ease;pointer-events:auto}
   #workout-screen{position:absolute;top:0;left:0;right:0;bottom:calc(44px + var(--sab));display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
@@ -342,9 +342,8 @@
   <div class="setup-sub">Training Plan</div>
   <div class="setup-label">Start Date</div>
   <input type="date" class="setup-input" id="start-date-input">
-  <script>document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];</script>
-  <button class="btn-primary" onclick="setupPlan()">Begin Training</button>
-</div><div id="home-screen" class="screen">
+  <button class="btn-primary" id="btn-begin" onclick="setupPlan()">Begin Training</button>
+</div><script>document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];</script><div id="home-screen" class="screen">
   <div class="home-header">
     <div class="home-phase-label" id="home-phase-label"></div>
     <div class="home-title" id="home-title"></div>
@@ -1838,6 +1837,11 @@ return max+1;
 async function init(){
 await loadState();
 document.getElementById(‘start-date-input’).value=new Date().toISOString().split(‘T’)[0];
+// Safari fix: blur date input after selection to ensure button is tappable
+document.getElementById(‘start-date-input’).addEventListener(‘change’,function(){this.blur();});
+// Backup click handler via addEventListener (Safari can drop onclick after date picker)
+document.getElementById(‘btn-begin’).addEventListener(‘click’,setupPlan);
+document.getElementById(‘btn-begin’).addEventListener(‘touchend’,function(e){e.preventDefault();setupPlan();});
 if(state.startDate){initHomeScreen();goTo(‘home-screen’);document.getElementById(‘bottom-nav’).classList.add(‘visible’);document.getElementById(‘nav-home’).classList.add(‘active’);}
 document.addEventListener(‘focus’,function(e){
 if(e.target.tagName===‘INPUT’||e.target.tagName===‘SELECT’){
