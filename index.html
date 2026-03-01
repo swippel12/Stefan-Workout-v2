@@ -17,14 +17,6 @@
   #workout-screen{position:absolute;top:0;left:0;right:0;bottom:calc(44px + var(--sab));display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
-  #setup-screen{align-items:center;justify-content:center;padding:32px 28px;padding-bottom:calc(32px + var(--sab));background:linear-gradient(160deg,#0a0a0a 0%,#111 100%);z-index:50}
-  .setup-logo{font-family:var(--bc);font-size:64px;font-weight:900;line-height:.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
-  .setup-sub{font-family:var(--bc);font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
-  .setup-label{font-family:var(--bc);font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;align-self:flex-start;width:100%}
-  .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--b);font-size:16px;padding:14px 16px;border-radius:6px;margin-bottom:28px;-webkit-appearance:none}
-  .setup-input:focus{outline:none;border-color:var(--accent)}
-  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:var(--bc);font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s;position:relative;z-index:51;-webkit-appearance:none;touch-action:manipulation}
-  .btn-primary:active{opacity:.8}
   #home-screen{background:var(--bg)}
   .home-header{padding:calc(var(--sat) + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .home-phase-label{font-family:var(--bc);font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
@@ -337,13 +329,7 @@
 </style>
 </head>
 <body>
-<div id="setup-screen" class="screen active">
-  <div class="setup-logo">12M</div>
-  <div class="setup-sub">Training Plan</div>
-  <div class="setup-label">Start Date</div>
-  <input type="date" class="setup-input" id="start-date-input">
-  <button class="btn-primary" id="btn-begin" onclick="setupPlan()">Begin Training</button>
-</div><script>document.getElementById('start-date-input').value=new Date().toISOString().split('T')[0];</script><div id="home-screen" class="screen">
+<div id="home-screen" class="screen">
   <div class="home-header">
     <div class="home-phase-label" id="home-phase-label"></div>
     <div class="home-title" id="home-title"></div>
@@ -408,7 +394,7 @@
     <div class="workout-title">Session History</div>
   </div>
   <div class="history-content" id="history-content"></div>
-</div><div id="plan-screen" class="screen">
+</div><div id="plan-screen" class="screen active">
   <div class="plan-header">
     <div class="plan-header-left">
       <div class="plan-screen-tag">OVERVIEW</div>
@@ -657,17 +643,6 @@ const week=Math.floor(diffDays/7)+1;
 const month=Math.min(Math.ceil(week/4),12);
 const weekInMonth=((week-1)%4)+1;
 return{week,month,weekInMonth,isDeload:weekInMonth===4,phase:PHASES.find(p=>p.months.includes(month))};
-}
-
-function setupPlan(){
-let val=document.getElementById(‘start-date-input’).value;
-if(!val){
-val=new Date().toISOString().split(‘T’)[0];
-document.getElementById(‘start-date-input’).value=val;
-}
-state.startDate=val;saveState();
-initHomeScreen();goTo(‘home-screen’);
-document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 }
 
 function goTo(screenId){
@@ -1294,9 +1269,40 @@ document.getElementById(‘confirm-modal’).addEventListener(‘click’,functi
 function confirmAction(){if(confirmCallback)confirmCallback();closeConfirm();}
 
 // –– Plan browser ––
+// –– Calendar date helpers ––
+function getMonthStartDate(monthNum){
+const start=new Date(state.startDate+‘T12:00:00’);
+start.setDate(start.getDate()+(monthNum-1)*28);
+return start;
+}
+function getWeekStartDate(monthNum,weekNum){
+const mStart=getMonthStartDate(monthNum);
+mStart.setDate(mStart.getDate()+(weekNum-1)*7);
+return mStart;
+}
+function formatMonthLabel(d){
+return d.toLocaleDateString(‘en-US’,{month:‘short’,year:‘numeric’});
+}
+function formatWeekRange(monthNum,weekNum){
+const ws=getWeekStartDate(monthNum,weekNum);
+const we=new Date(ws);we.setDate(we.getDate()+6);
+const sameMonth=ws.getMonth()===we.getMonth();
+if(sameMonth) return `${ws.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${we.getDate()}`;
+return `${ws.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${we.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+}
+function getCurrentPlanMonth(){
+const start=new Date(state.startDate+‘T12:00:00’);
+const today=new Date();today.setHours(12,0,0,0);
+const diffDays=Math.floor((today-start)/(1000*60*60*24));
+if(diffDays<0)return 1;
+const m=Math.floor(diffDays/28)+1;
+return Math.min(Math.max(m,1),12);
+}
+
 function initPlanScreen(){
 const content=document.getElementById(‘plan-content’);content.innerHTML=’’;
 document.getElementById(‘plan-screen-title’).textContent=‘The Plan’;
+const currentMonth=getCurrentPlanMonth();
 let totalRequired=0,totalDone=0;
 const phaseProgress=PHASES.map(phase=>{
 let req=0,done=0;
@@ -1313,15 +1319,25 @@ const block=document.createElement(‘div’);block.className=‘phase-block’;
 const monthCards=phase.months.map(m=>{
 const md=PLAN.months[m];let mReq=0,mDone=0;
 [1,2,3,4].forEach(w=>[‘A’,‘B’].forEach(d=>{mReq++;if(state.completedDays[`${m}_${w}_${d}`])mDone++;}));
-return `<div class="month-card ${pcC[pi]}-card" onclick="showMonthDetail(${m})"><div class="month-card-num">Month ${m}</div><div class="month-card-name">${md.name}</div><div style="margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.round(mDone/mReq*100)}%;background:${barC[pi]};border-radius:2px"></div></div><div class="month-card-arrow" style="margin-top:6px">${mDone}/${mReq} · View →</div></div>`;
+const calLabel=formatMonthLabel(getMonthStartDate(m));
+const isCurrent=m===currentMonth;
+const highlightStyle=isCurrent?‘border:2px solid ‘+barC[pi]+’;box-shadow:0 0 12px ‘+barC[pi]+‘33’:’’;
+const currentBadge=isCurrent?`<div style="font-size:9px;font-weight:700;letter-spacing:2px;color:${barC[pi]};text-transform:uppercase;margin-top:4px">◉ CURRENT</div>`:’’;
+return `<div class="month-card ${pcC[pi]}-card" style="${highlightStyle}" onclick="showMonthDetail(${m})"><div class="month-card-num">Month ${m} — ${calLabel}</div><div class="month-card-name">${md.name}</div>${currentBadge}<div style="margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${Math.round(mDone/mReq*100)}%;background:${barC[pi]};border-radius:2px"></div></div><div class="month-card-arrow" style="margin-top:6px">${mDone}/${mReq} · View →</div></div>`;
 }).join(’’);
 block.innerHTML=`<div class="phase-block-header"><div class="phase-dot" style="background:${dotC[pi]}"></div><div class="phase-block-title ${pcC[pi]}">Phase ${phase.num} — ${phase.name}</div></div><div class="month-grid">${monthCards}</div>`;
 content.appendChild(block);
 });
+// Auto-scroll to current month
+setTimeout(()=>{
+const currentCard=content.querySelector(`[style*="box-shadow"]`);
+if(currentCard)currentCard.scrollIntoView({behavior:‘smooth’,block:‘center’});
+},100);
 }
 
 function showMonthDetail(monthNum){
 const md=PLAN.months[monthNum];const phase=PHASES.find(p=>p.months.includes(monthNum));
+const calLabel=formatMonthLabel(getMonthStartDate(monthNum));
 const focuses=[
 [‘Orientation’,‘Technique Lock-In’,‘Progressive Load’,‘Deload’],[‘Volume Increase’,‘Progressive Overload’,‘Intensity Surge’,‘Deload’],
 [‘5x5 Strength Start’,‘Load Progression’,‘Peak Sets’,‘Deload + Assess’],[‘Peaking’,‘PR Attempts’,‘Phase Tests’,‘Phase Close’],
@@ -1331,13 +1347,14 @@ const focuses=[
 [‘Final Build’,‘Final Build’,‘Peak’,‘Deload’],[‘Year-End Peak’,‘PR Test’,‘Celebration’,‘Deload’]
 ][monthNum-1]||[‘Week 1’,‘Week 2’,‘Week 3’,‘Week 4’];
 const content=document.getElementById(‘plan-content’);
-content.innerHTML=`<button class="plan-back-btn" onclick="initPlanScreen();document.getElementById('plan-screen-title').textContent='The Plan'">← All Phases</button><div style="margin-bottom:6px"><span class="plan-screen-tag">Phase ${phase.num} · Month ${monthNum}</span></div><div style="font-family:var(--bc);font-size:28px;font-weight:900;margin-bottom:20px">${md.name.toUpperCase()}</div><div id="weeks-list"></div>`;
+content.innerHTML=`<button class="plan-back-btn" onclick="initPlanScreen();document.getElementById('plan-screen-title').textContent='The Plan'">← All Phases</button><div style="margin-bottom:6px"><span class="plan-screen-tag">Phase ${phase.num} · Month ${monthNum} · ${calLabel}</span></div><div style="font-family:var(--bc);font-size:28px;font-weight:900;margin-bottom:20px">${md.name.toUpperCase()}</div><div id="weeks-list"></div>`;
 document.getElementById(‘plan-screen-title’).textContent=`Month ${monthNum}`;
 const weeksList=document.getElementById(‘weeks-list’);
 [1,2,3,4].forEach(w=>{
 const block=document.createElement(‘div’);block.className=‘week-block’;
 const bodyId=`wb-body-${w}`,chevId=`wb-chev-${w}`;
-block.innerHTML=`<div class="week-block-header" onclick="toggleWeek('${bodyId}','${chevId}')"><div><div class="week-block-title">Week ${w}${w===4?' — Deload':''}</div><div class="week-block-meta">${focuses[w-1]}</div></div><div class="week-block-chevron" id="${chevId}">›</div></div><div class="week-block-body" id="${bodyId}">${buildDayTabs(monthNum,w)}</div>`;
+const weekDates=formatWeekRange(monthNum,w);
+block.innerHTML=`<div class="week-block-header" onclick="toggleWeek('${bodyId}','${chevId}')"><div><div class="week-block-title">Week ${w}${w===4?' — Deload':''}</div><div class="week-block-meta">${focuses[w-1]} · ${weekDates}</div></div><div class="week-block-chevron" id="${chevId}">›</div></div><div class="week-block-body" id="${bodyId}">${buildDayTabs(monthNum,w)}</div>`;
 weeksList.appendChild(block);
 });
 }
@@ -1836,13 +1853,11 @@ return max+1;
 
 async function init(){
 await loadState();
-document.getElementById(‘start-date-input’).value=new Date().toISOString().split(‘T’)[0];
-// Safari fix: blur date input after selection to ensure button is tappable
-document.getElementById(‘start-date-input’).addEventListener(‘change’,function(){this.blur();});
-// Backup click handler via addEventListener (Safari can drop onclick after date picker)
-document.getElementById(‘btn-begin’).addEventListener(‘click’,setupPlan);
-document.getElementById(‘btn-begin’).addEventListener(‘touchend’,function(e){e.preventDefault();setupPlan();});
-if(state.startDate){initHomeScreen();goTo(‘home-screen’);document.getElementById(‘bottom-nav’).classList.add(‘visible’);document.getElementById(‘nav-home’).classList.add(‘active’);}
+if(!state.startDate){state.startDate=‘2026-03-01’;saveState();}
+initHomeScreen();
+initPlanScreen();
+document.getElementById(‘bottom-nav’).classList.add(‘visible’);
+document.getElementById(‘nav-plan’).classList.add(‘active’);
 document.addEventListener(‘focus’,function(e){
 if(e.target.tagName===‘INPUT’||e.target.tagName===‘SELECT’){
 setTimeout(()=>{e.target.scrollIntoView({behavior:‘smooth’,block:‘center’});},300);
