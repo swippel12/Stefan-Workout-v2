@@ -337,13 +337,6 @@
 </style>
 </head>
 <body>
-<div id="setup-screen" class="screen active">
-  <div class="setup-logo">12M</div>
-  <div class="setup-sub">Training Plan</div>
-  <div class="setup-label">Start Date</div>
-  <input type="date" class="setup-input" id="start-date-input" onchange="setupPlan()">
-  <button class="btn-primary" onclick="setupPlan()" style="position:relative;z-index:10;-webkit-touch-callout:none">Begin Training</button>
-</div>
 <div id="home-screen" class="screen">
   <div class="home-header">
     <div class="home-phase-label" id="home-phase-label"></div>
@@ -409,7 +402,7 @@
     <div class="workout-title">Session History</div>
   </div>
   <div class="history-content" id="history-content"></div>
-</div><div id="plan-screen" class="screen">
+</div><div id="plan-screen" class="screen active">
   <div class="plan-header">
     <div class="plan-header-left">
       <div class="plan-screen-tag">OVERVIEW</div>
@@ -557,8 +550,8 @@
   <div class="ex-history-content" id="ex-history-content"></div>
 </div><nav class="bottom-nav" id="bottom-nav">
   <div class="nav-items">
-    <button class="nav-item active" id="nav-home" onclick="navTo('home-screen','nav-home')"><span class="nav-icon">⊞</span>Home</button>
-    <button class="nav-item" id="nav-plan" onclick="navTo('plan-screen','nav-plan')"><span class="nav-icon">☰</span>Plan</button>
+    <button class="nav-item" id="nav-home" onclick="navTo('home-screen','nav-home')"><span class="nav-icon">⊞</span>Home</button>
+    <button class="nav-item active" id="nav-plan" onclick="navTo('plan-screen','nav-plan')"><span class="nav-icon">☰</span>Plan</button>
     <button class="nav-item" id="nav-weight" onclick="navTo('weight-screen','nav-weight')"><span class="nav-icon">⚖</span>Weight</button>
     <button class="nav-item" id="nav-history" onclick="navTo('history-screen','nav-history')"><span class="nav-icon">◳</span>History</button>
     <button class="nav-item" id="nav-settings" onclick="navTo('settings-screen','nav-settings')"><span class="nav-icon">⚙</span>Settings</button>
@@ -1865,26 +1858,14 @@ const id=el.id;if(id&&id.startsWith(‘ex-’)){const n=parseInt(id.replace(‘e
 return max+1;
 }
 
-function setupPlan(){
-const val=document.getElementById(‘start-date-input’).value;
-if(!val)return;
-state.startDate=val;saveState();
-initHomeScreen();
-goTo(‘plan-screen’);
-document.getElementById(‘bottom-nav’).classList.add(‘visible’);
-document.getElementById(‘nav-plan’).classList.add(‘active’);
-}
-
 function init(){
 loadState();
-var dateInput=document.getElementById(‘start-date-input’);
-if(dateInput){dateInput.value=new Date().toISOString().split(‘T’)[0];}
-if(state.startDate){
+if(!state.startDate)state.startDate=‘2026-03-01’;
+saveState();
 initHomeScreen();
-goTo(‘plan-screen’);
+initPlanScreen();
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 document.getElementById(‘nav-plan’).classList.add(‘active’);
-}
 }
 init();
 </script></body></html>
