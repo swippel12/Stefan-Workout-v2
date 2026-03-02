@@ -17,6 +17,14 @@
   #workout-screen{position:absolute;top:0;left:0;right:0;bottom:calc(44px + 24px);display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
   #workout-screen.active{display:flex}
   #workout-screen.active ~ #bottom-nav{display:flex}
+  #setup-screen{align-items:center;justify-content:center;padding:32px 28px;background:linear-gradient(160deg,#0a0a0a 0%,#111 100%)}
+  .setup-logo{font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:900;line-height:0.9;letter-spacing:-2px;color:var(--accent);text-align:center;margin-bottom:10px}
+  .setup-sub{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:4px;color:var(--text-dim);text-transform:uppercase;text-align:center;margin-bottom:48px}
+  .setup-label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;margin-bottom:8px;align-self:flex-start;width:100%}
+  .setup-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Barlow',sans-serif;font-size:16px;padding:14px 16px;border-radius:6px;margin-bottom:28px;-webkit-appearance:none}
+  .setup-input:focus{outline:none;border-color:var(--accent)}
+  .btn-primary{width:100%;background:var(--accent);color:#000;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;padding:16px;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}
+  .btn-primary:active{opacity:.8}
   #home-screen{background:var(--bg)}
   .home-header{padding:calc(44px + 8px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
   .home-phase-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
@@ -329,6 +337,13 @@
 </style>
 </head>
 <body>
+<div id="setup-screen" class="screen active">
+  <div class="setup-logo">12M</div>
+  <div class="setup-sub">Training Plan</div>
+  <div class="setup-label">Start Date</div>
+  <input type="date" class="setup-input" id="start-date-input">
+  <button class="btn-primary" onclick="setupPlan()">Begin Training</button>
+</div>
 <div id="home-screen" class="screen">
   <div class="home-header">
     <div class="home-phase-label" id="home-phase-label"></div>
@@ -394,7 +409,7 @@
     <div class="workout-title">Session History</div>
   </div>
   <div class="history-content" id="history-content"></div>
-</div><div id="plan-screen" class="screen active">
+</div><div id="plan-screen" class="screen">
   <div class="plan-header">
     <div class="plan-header-left">
       <div class="plan-screen-tag">OVERVIEW</div>
@@ -1853,13 +1868,26 @@ const id=el.id;if(id&&id.startsWith(‘ex-’)){const n=parseInt(id.replace(‘e
 return max+1;
 }
 
-async function init(){
-await loadState();
-if(!state.startDate){state.startDate=‘2026-03-01’;saveState();}
+function setupPlan(){
+const val=document.getElementById(‘start-date-input’).value;
+if(!val)return;
+state.startDate=val;saveState();
 initHomeScreen();
 goTo(‘plan-screen’);
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 document.getElementById(‘nav-plan’).classList.add(‘active’);
+}
+
+async function init(){
+await loadState();
+const today=new Date().toISOString().split(‘T’)[0];
+document.getElementById(‘start-date-input’).value=today;
+if(state.startDate){
+initHomeScreen();
+goTo(‘plan-screen’);
+document.getElementById(‘bottom-nav’).classList.add(‘visible’);
+document.getElementById(‘nav-plan’).classList.add(‘active’);
+}
 }
 init();
 </script></body></html>
