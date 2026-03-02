@@ -1294,6 +1294,7 @@ if(sameMonth) return `${ws.toLocaleDateString('en-US',{month:'short',day:'numeri
 return `${ws.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${we.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
 }
 function getCurrentPlanMonth(){
+if(!state.startDate)state.startDate=‘2026-03-01’;
 const start=new Date(state.startDate+‘T12:00:00’);
 const today=new Date();today.setHours(12,0,0,0);
 const diffDays=Math.floor((today-start)/(1000*60*60*24));
@@ -1303,6 +1304,13 @@ return Math.min(Math.max(m,1),12);
 }
 
 function initPlanScreen(){
+try{_initPlanScreen();}catch(e){
+console.error(‘initPlanScreen error:’,e);
+const c=document.getElementById(‘plan-content’);
+if(c)c.innerHTML=’<div style="padding:40px 20px;color:red">Error loading plan: ‘+e.message+’</div>’;
+}
+}
+function _initPlanScreen(){
 const content=document.getElementById(‘plan-content’);content.innerHTML=’’;
 document.getElementById(‘plan-screen-title’).textContent=‘The Plan’;
 const currentMonth=getCurrentPlanMonth();
@@ -1854,6 +1862,7 @@ const id=el.id;if(id&&id.startsWith(‘ex-’)){const n=parseInt(id.replace(‘e
 return max+1;
 }
 
+let initComplete=false;
 async function init(){
 try{await loadState();}catch(e){console.error(‘loadState failed:’,e);}
 if(!state.startDate){state.startDate=‘2026-03-01’;try{await saveState();}catch(e){}}
@@ -1861,6 +1870,7 @@ try{initHomeScreen();}catch(e){console.error(‘initHomeScreen failed:’,e);}
 try{initPlanScreen();}catch(e){console.error(‘initPlanScreen failed:’,e);}
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 document.getElementById(‘nav-plan’).classList.add(‘active’);
+initComplete=true;
 document.addEventListener(‘focus’,function(e){
 if(e.target.tagName===‘INPUT’||e.target.tagName===‘SELECT’){
 setTimeout(()=>{e.target.scrollIntoView({behavior:‘smooth’,block:‘center’});},300);
@@ -1868,4 +1878,15 @@ setTimeout(()=>{e.target.scrollIntoView({behavior:‘smooth’,block:‘center�
 },true);
 }
 init();
+// Fallback: if init() hangs (e.g. storage API never resolves), force render after 2 seconds
+setTimeout(()=>{
+if(!initComplete){
+console.warn(‘init() timed out — forcing render’);
+if(!state.startDate)state.startDate=‘2026-03-01’;
+try{initHomeScreen();}catch(e){}
+try{initPlanScreen();}catch(e){}
+document.getElementById(‘bottom-nav’).classList.add(‘visible’);
+document.getElementById(‘nav-plan’).classList.add(‘active’);
+}
+},2000);
 </script></body></html>
