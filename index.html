@@ -557,6 +557,11 @@
     <button class="nav-item" id="nav-settings" onclick="navTo('settings-screen','nav-settings')"><span class="nav-icon">⚙</span>Settings</button>
   </div>
 </nav><script>
+window.onerror=function(msg,url,line,col,err){
+  var el=document.getElementById('plan-content');
+  if(el)el.innerHTML='<div style="color:red;padding:20px;font-size:14px">JS Error: '+msg+' (line '+line+')</div>';
+};
+
 // Compressed exercise helper: [name, sets, reps, rest, note, superset?]
 function E(n,s,r,re,no,ss){return{name:n,sets:s,reps:r,rest:re,note:no,superset:!!ss}}
 // Compressed day helper: {name, exercises[], bonus?}
@@ -1859,11 +1864,17 @@ return max+1;
 }
 
 function init(){
+try{
 loadState();
 if(!state.startDate)state.startDate=‘2026-03-01’;
 saveState();
+}catch(e){document.getElementById(‘plan-content’).innerHTML=’<div style="color:red;padding:20px">Load error: ‘+e.message+’</div>’;return;}
+try{
 initHomeScreen();
+}catch(e){document.getElementById(‘plan-content’).innerHTML=’<div style="color:red;padding:20px">Home error: ‘+e.message+’</div>’;}
+try{
 initPlanScreen();
+}catch(e){document.getElementById(‘plan-content’).innerHTML=’<div style="color:red;padding:20px">Plan error: ‘+e.message+’</div>’;}
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 document.getElementById(‘nav-plan’).classList.add(‘active’);
 }
