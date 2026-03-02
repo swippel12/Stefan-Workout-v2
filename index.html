@@ -626,13 +626,16 @@ function resetTimer(){clearInterval(timerInterval);timerInterval=null;timerRunni
 function stopTimer(){clearInterval(timerInterval);timerInterval=null;timerRunning=false;}
 
 // –– State persistence ––
+function storageTimeout(promise,ms){
+return Promise.race([promise,new Promise((_,rej)=>setTimeout(()=>rej(new Error(‘timeout’)),ms))]);
+}
 async function saveState(){
 try{localStorage.setItem(‘stefan_workout_v1’,JSON.stringify(state));}catch(e){}
-try{await window.storage.set(‘workout_v1’,JSON.stringify(state));}catch(e){}
+try{if(window.storage)await storageTimeout(window.storage.set(‘workout_v1’,JSON.stringify(state)),1000);}catch(e){}
 }
 async function loadState(){
 try{const s=localStorage.getItem(‘stefan_workout_v1’);if(s){state=JSON.parse(s);return;}}catch(e){}
-try{const r=await window.storage.get(‘workout_v1’);if(r&&r.value){state=JSON.parse(r.value);return;}}catch(e){}
+try{if(window.storage){const r=await storageTimeout(window.storage.get(‘workout_v1’),1000);if(r&&r.value){state=JSON.parse(r.value);return;}}}catch(e){}
 }
 
 function getCurrentPosition(){
@@ -1852,10 +1855,10 @@ return max+1;
 }
 
 async function init(){
-await loadState();
-if(!state.startDate){state.startDate=‘2026-03-01’;saveState();}
-initHomeScreen();
-initPlanScreen();
+try{await loadState();}catch(e){console.error(‘loadState failed:’,e);}
+if(!state.startDate){state.startDate=‘2026-03-01’;try{await saveState();}catch(e){}}
+try{initHomeScreen();}catch(e){console.error(‘initHomeScreen failed:’,e);}
+try{initPlanScreen();}catch(e){console.error(‘initPlanScreen failed:’,e);}
 document.getElementById(‘bottom-nav’).classList.add(‘visible’);
 document.getElementById(‘nav-plan’).classList.add(‘active’);
 document.addEventListener(‘focus’,function(e){
