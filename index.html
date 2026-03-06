@@ -20,7 +20,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .screen.active{animation:fadeIn .2s ease}
 ::-webkit-scrollbar{width:0}
 .phase-1{color:var(--phase1)}.phase-2{color:var(--phase2)}.phase-3{color:var(--phase3)}
-.home-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
+.home-header{padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0}
 .home-phase-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;margin-bottom:4px}
 .home-title{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:900;line-height:1;letter-spacing:-1px}
 .home-meta{font-size:13px;color:var(--text-dim);margin-top:4px}
@@ -53,8 +53,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .benchmark-mini-label{font-size:10px;color:var(--text-muted);margin-bottom:2px}
 .benchmark-mini-val{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text-dim)}
 .benchmark-mini-val.filled{color:var(--accent)}
-.workout-header{padding:44px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
-.workout-back{font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif}
+.workout-header{padding:max(env(safe-area-inset-top),20px) 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.workout-back{font-size:15px;cursor:pointer;display:flex;align-items:center;gap:5px;margin-bottom:12px;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif;padding:8px 12px 8px 0;min-height:44px}
 .workout-back:active{color:var(--text)}
 .workout-day-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:3px}
 .workout-title{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;line-height:1}
@@ -107,8 +107,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Barlow
 .complete-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center}
 .complete-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--accent)}
 .complete-stat-label{font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
-.plan-header{padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between}
-.plan-back-btn{font-size:13px;cursor:pointer;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif;padding:0;margin-bottom:6px;display:block}
+.plan-header{padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between}
+.plan-back-btn{font-size:15px;cursor:pointer;background:none;border:none;color:var(--text-dim);font-family:'Barlow',sans-serif;padding:8px 12px 8px 0;margin-bottom:6px;display:block;min-height:44px}
 .plan-back-btn:active{color:var(--text)}
 .plan-screen-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:4px;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px}
 .plan-screen-title{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;line-height:1}
@@ -233,8 +233,8 @@ canvas#weight-chart{width:100%;display:block;border-radius:4px}
 .data-info strong{color:var(--text)}
 .overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:200;display:none;flex-direction:column}
 .overlay.active{display:flex}
-.overlay-header{display:flex;align-items:center;padding:44px 16px 16px;gap:12px;border-bottom:1px solid var(--border);flex-shrink:0}
-.overlay-back{background:none;border:none;color:var(--text-dim);font-size:24px;cursor:pointer;padding:0}
+.overlay-header{display:flex;align-items:center;padding:max(env(safe-area-inset-top),20px) 16px 16px;gap:12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.overlay-back{background:none;border:none;color:var(--text-dim);font-size:28px;cursor:pointer;padding:8px 12px 8px 4px;min-height:44px;min-width:44px;display:flex;align-items:center}
 .overlay-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;flex:1}
 .overlay-content{flex:1;overflow-y:auto;padding:16px 20px 40px}
 .row-timer{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px}
@@ -320,8 +320,7 @@ canvas#weight-chart{width:100%;display:block;border-radius:4px}
 </div>
 
 <div id="benchmark-screen" class="screen">
-  <div style="padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
-    <button class="workout-back" onclick="goTo('home-screen')">← Back</button>
+  <div style="padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
     <div class="workout-day-tag" style="color:var(--text-dim)">PROGRESS</div>
     <div class="workout-title">PR Tracker</div>
   </div>
@@ -329,7 +328,7 @@ canvas#weight-chart{width:100%;display:block;border-radius:4px}
 </div>
 
 <div id="history-screen" class="screen">
-  <div style="padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
+  <div style="padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
     <div class="workout-day-tag" style="color:var(--text-dim)">LOG</div>
     <div class="workout-title">Session History</div>
   </div>
@@ -337,7 +336,7 @@ canvas#weight-chart{width:100%;display:block;border-radius:4px}
 </div>
 
 <div id="weight-screen" class="screen">
-  <div style="padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
+  <div style="padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
     <div class="plan-screen-tag">TRACKING</div>
     <div class="workout-title">Body Weight</div>
   </div>
@@ -367,7 +366,7 @@ canvas#weight-chart{width:100%;display:block;border-radius:4px}
 </div>
 
 <div id="settings-screen" class="screen">
-  <div style="padding:44px 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
+  <div style="padding:max(env(safe-area-inset-top),20px) 20px 16px;border-bottom:1px solid var(--border);flex-shrink:0">
     <div class="plan-screen-tag">APP</div>
     <div class="workout-title">Settings</div>
   </div>
@@ -694,7 +693,12 @@ function initHomeScreen(){
     const isDone=state.completedDays[sk];
     const card=document.createElement('div');
     card.className=`day-card${isBonus?' bonus':''}${isDone?' completed':''}`;
-    card.innerHTML=`<div><div class="day-card-tag">Day ${day}${isBonus?' · Optional':' · Required'}</div><div class="day-card-name">${dd.name}</div><div class="day-card-count">${dd.exercises.length} exercises</div></div>${isDone?`<button class="day-card-undo" onclick="event.stopPropagation();undoDay('${sk}')">UNDO</button>`:'<div class="day-card-arrow">→</div>'}`;
+    let doneDate='';
+    if(isDone&&typeof isDone==='string'){
+      const dd2=new Date(isDone+'T12:00:00');
+      doneDate=`<div style="font-size:10px;color:var(--green);margin-top:2px">Done ${dd2.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>`;
+    }
+    card.innerHTML=`<div><div class="day-card-tag">Day ${day}${isBonus?' · Optional':' · Required'}</div><div class="day-card-name">${dd.name}</div><div class="day-card-count">${dd.exercises.length} exercises${doneDate?'':''}</div>${doneDate}</div>${isDone?`<button class="day-card-undo" onclick="event.stopPropagation();undoDay('${sk}')">UNDO</button>`:'<div class="day-card-arrow">→</div>'}`;
     if(!isDone)card.onclick=()=>startWorkout(month,weekInMonth,day);
     cards.appendChild(card);
   });
@@ -831,6 +835,12 @@ function updateProgress(){
 function finishWorkout(){
   const dayData=PLAN.months[currentWorkout.month].days[currentWorkout.day];
   const allEx=[...dayData.exercises,...currentWorkout.addedExercises];
+  // Check at least 1 set is checked
+  let anyChecked=false;
+  allEx.forEach((ex,i)=>{for(let s=0;s<(ex.sets||1);s++){const c=document.getElementById(`chk-${i}-${s}`);if(c&&c.classList.contains('done'))anyChecked=true;}});
+  if(!anyChecked){
+    if(!confirm('No sets marked complete. Save this session anyway?'))return;
+  }
   const logEntry={};let totalWeight=0,setsLogged=0;
   allEx.forEach((ex,i)=>{
     logEntry[ex.name]=[];
@@ -844,7 +854,7 @@ function finishWorkout(){
   });
   const dateStr=new Date().toISOString().split('T')[0];
   state.log[`${dateStr}_${currentWorkout.day}`]=logEntry;
-  state.completedDays[currentWorkout.logKey]=true;
+  state.completedDays[currentWorkout.logKey]=dateStr;
   if(rowTimerSeconds>0)state.rowTimes.push({date:dateStr,seconds:rowTimerSeconds});
   resetRowTimer();saveState();
 
@@ -857,6 +867,20 @@ function finishWorkout(){
 }
 
 function exitWorkout(){
+  // Check if user has entered any data
+  const dayData=PLAN.months[currentWorkout.month].days[currentWorkout.day];
+  const allEx=[...dayData.exercises,...currentWorkout.addedExercises];
+  let hasData=false;
+  allEx.forEach((ex,i)=>{
+    for(let s=0;s<(ex.sets||1);s++){
+      const w=document.getElementById(`w-${i}-${s}`);
+      const c=document.getElementById(`chk-${i}-${s}`);
+      if((w&&w.value)||(c&&c.classList.contains('done'))){hasData=true;}
+    }
+  });
+  if(hasData||rowTimerSeconds>0){
+    if(!confirm('You have unsaved workout data. Exit without saving?'))return;
+  }
   resetRowTimer();
   document.getElementById('bottom-nav').style.display='flex';
   goTo('home-screen');
@@ -920,7 +944,12 @@ function filterExLib(query){
 }
 
 function selectExFromLib(name){
-  currentWorkout.addedExercises.push({name,sets:3,reps:'10',rest:'60s',note:'Added exercise',superset:false});
+  const setsInput=prompt('How many sets?','3');
+  if(!setsInput)return;
+  const sets=parseInt(setsInput)||3;
+  const repsInput=prompt('Reps per set?','10');
+  if(!repsInput)return;
+  currentWorkout.addedExercises.push({name,sets,reps:repsInput,rest:'60s',note:'Added exercise',superset:false});
   closeOverlay('add-movement-overlay');
   renderWorkoutContent();
 }
