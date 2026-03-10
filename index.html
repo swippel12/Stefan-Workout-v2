@@ -476,6 +476,32 @@ function getCurrentPosition(){
 }
 
 // ==================== NAVIGATION ====================
+
+function getWeekStartDate(month,weekInMonth){
+  if(!state.startDate)return null;
+  const start=new Date(state.startDate+'T00:00:00');
+  const overallWeek=(month-1)*4+(weekInMonth-1);
+  const d=new Date(start.getTime()+overallWeek*7*24*60*60*1000);
+  return d;
+}
+
+function getMonthDateRange(month){
+  const s=getWeekStartDate(month,1);
+  const e=getWeekStartDate(month,4);
+  if(!s||!e)return'';
+  const end=new Date(e.getTime()+6*24*60*60*1000);
+  const fmt=(d)=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  return`${fmt(s)} – ${fmt(end)}`;
+}
+
+function formatWeekRange(month,weekInMonth){
+  const s=getWeekStartDate(month,weekInMonth);
+  if(!s)return'';
+  const e=new Date(s.getTime()+6*24*60*60*1000);
+  const fmt=(d)=>d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  return`${fmt(s)} – ${fmt(e)}`;
+}
+
 function goTo(screenId){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(screenId).classList.add('active');
@@ -550,10 +576,12 @@ function initPlanScreen(){
       [1,2,3,4].forEach(w=>['A','B'].forEach(d=>{mReq++;if(state.completedDays[`${m}_${w}_${d}`])mDone++;}));
       const mPct=Math.round(mDone/mReq*100);
       const isCurrent=m===currentMonth;
+      const dateRange=getMonthDateRange(m);
       return`<div class="month-card ${phaseCardColors[pi]}-card${isCurrent?' current':''}" onclick="showMonthDetail(${m})">
         <div class="month-card-num">Month ${m}</div>
         <div class="month-card-name">${md.name}</div>
-        <div style="margin-top:8px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${mPct}%;background:${phaseBarColors[pi]};border-radius:2px"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:4px">${dateRange}</div>
+        <div style="margin-top:6px;height:3px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${mPct}%;background:${phaseBarColors[pi]};border-radius:2px"></div></div>
         <div class="month-card-arrow" style="margin-top:6px">${mDone}/${mReq} · View →</div>
       </div>`;
     }).join('');
@@ -593,16 +621,19 @@ function showMonthDetail(monthNum){
   const focuses=weekFocusData[monthNum-1]||['Week 1','Week 2','Week 3','Week 4'];
 
   const content=document.getElementById('plan-content');
+  const monthDateRange=getMonthDateRange(monthNum);
   content.innerHTML=`
     <button class="plan-back-btn" onclick="initPlanScreen()">← All Phases</button>
     <div style="margin-bottom:6px"><span class="plan-screen-tag">Phase ${phase.num} · Month ${monthNum}</span></div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;margin-bottom:20px">${md.name.toUpperCase()}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;margin-bottom:4px">${md.name.toUpperCase()}</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px">${monthDateRange}</div>
     <div id="weeks-list"></div>`;
   document.getElementById('plan-screen-title').textContent=`Month ${monthNum}`;
 
   const weeksList=document.getElementById('weeks-list');
   [1,2,3,4].forEach(w=>{
     const isDeload=w===4;
+    const weekRange=formatWeekRange(monthNum,w);
     const block=document.createElement('div');
     block.className='week-block';
     const bodyId=`wb-body-${w}`;
@@ -611,7 +642,7 @@ function showMonthDetail(monthNum){
       <div class="week-block-header" onclick="toggleWeek('${bodyId}','${chevId}')">
         <div>
           <div class="week-block-title">Week ${w}${isDeload?' — Deload':''}</div>
-          <div class="week-block-meta">${focuses[w-1]}</div>
+          <div class="week-block-meta">${focuses[w-1]}  ·  ${weekRange}</div>
         </div>
         <div class="week-block-chevron" id="${chevId}">›</div>
       </div>
@@ -672,7 +703,8 @@ function initHomeScreen(){
   pl.textContent=`PHASE ${phase.num} — ${phase.name}`;
   pl.className=`home-phase-label ${phase.color}`;
   document.getElementById('home-title').textContent=`MONTH ${month} — ${md.name.toUpperCase()}`;
-  document.getElementById('home-meta').textContent=`Week ${weekInMonth} of 4  ·  Overall Week ${week}`;
+  const weekRange=formatWeekRange(month,weekInMonth);
+  document.getElementById('home-meta').textContent=`Week ${weekInMonth} of 4  ·  ${weekRange}`;
 
   const strip=document.getElementById('home-week-strip');
   strip.innerHTML='';
